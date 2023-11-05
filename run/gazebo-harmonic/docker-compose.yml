@@ -1,0 +1,252 @@
+version: "3"
+services:
+  px4-001:
+    depends_on:
+      - qgc
+      - sim
+    privileged: true
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      QT_NO_MITSHM:               ${QT_NO_MITSHM}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      QGC_IP:                     ${CONTAINER_QGC_ADDR}
+      ROS2_UXRCE_IP:              ${CONTAINER_ROS2_UXRCE_ADDR}
+      GZ_PARTITION:               ${GZ_PARTITION}
+      GZ_RELAY:                   ${GZ_RELAY}
+      GZ_IP:                      ${GZ_IP}
+      SITL_TYPE:                  ${SITL_TYPE}
+      SITL_AIRFRAME_ID:           ${SITL_AIRFRAME_ID}
+      SITL_AIRFRAME:              ${SITL_AIRFRAME}
+      SITL_POSE:                  ${SITL_POSE}
+      UXRCE_DDS_CFG:              ${UXRCE_DDS_CFG}
+      PX4_UXRCE_DDS_NS:           ${PX4_UXRCE_DDS_NS}
+      PX4_HOME_LAT:               ${PX4_HOME_LAT}     
+      PX4_HOME_LON:               ${PX4_HOME_LON}
+      PX4_HOME_ALT:               ${PX4_HOME_ALT}
+      DEBUG_MODE:                 ${PX4_DEBUG_MODE}
+      EXPORT_ENV:                 ${PX4_EXPORT_ENV}
+      # -------------------------------------------------
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR}
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+
+      # ---------SET TO USE VULKAN WITHN VIDIA GPU-------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      - /usr/share/vulkan/icd.d/nvidia_icd.json:/etc/vulkan/icd.d/nvidia_icd.json
+      - /usr/share/vulkan/implicit_layer.d/nvidia_layers.json:/etc/vulkan/implicit_layer.d/nvidia_layers.json
+      - /usr/share/glvnd/egl_vendor.d/10_nvidia.json:/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+      # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      # - ./px4-autopilot-container/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/renderD128
+      # -------------------------------------------------
+
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_PX4_ADDR}
+    container_name:   ${CONTAINER_PX4_NAME}
+    hostname:         ${CONTAINER_PX4_HOSTNAME}
+    image:            ${CONTAINER_PX4_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  sim:
+    privileged: true
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      QT_NO_MITSHM:               ${QT_NO_MITSHM}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      SITL_TYPE:                  ${SITL_TYPE}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      GZ_PARTITION:               ${GZ_PARTITION}
+      PX4_GZ_MODELS:              ${PX4_GZ_MODELS}
+      PX4_GZ_WORLDS:              ${PX4_GZ_WORLDS}
+      GZ_SIM_USER_RESOURCE_PATH:  ${GZ_SIM_USER_RESOURCE_PATH}
+      HEADLESS:                   ${HEADLESS}
+      DEBUG_MODE:                 ${SIM_DEBUG_MODE}
+      EXPORT_ENV:                 ${SIM_EXPORT_ENV}
+      # -------------------------------------------------
+
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR}
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+
+      # ---------SET TO USE VULKAN WITHN VIDIA GPU-------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      - /usr/share/vulkan/icd.d/nvidia_icd.json:/etc/vulkan/icd.d/nvidia_icd.json
+      - /usr/share/vulkan/implicit_layer.d/nvidia_layers.json:/etc/vulkan/implicit_layer.d/nvidia_layers.json
+      - /usr/share/glvnd/egl_vendor.d/10_nvidia.json:/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+      # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      # - ./gazebo/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/render128
+      # -------------------------------------------------
+
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_SIM_ADDR}
+    container_name:   ${CONTAINER_SIM_NAME}
+    hostname:         ${CONTAINER_SIM_HOSTNAME}
+    image:            ${CONTAINER_SIM_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  qgc:
+    privileged: true
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      QT_NO_MITSHM:               ${QT_NO_MITSHM}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      HEADLESS:                   ${QGC_HEADLESS}
+      # -------------------------------------------------
+
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR}
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/render128
+      # -------------------------------------------------
+      
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_QGC_ADDR}
+    container_name:   ${CONTAINER_QGC_NAME}
+    hostname:         ${CONTAINER_QGC_HOSTNAME}
+    image:            ${CONTAINER_QGC_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  ros2-xrce:
+    depends_on:
+      - qgc
+      - sim
+      - px4-001
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_XRCE_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_XRCE_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR}
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+
+      # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      # - /entrypoint.sh:/usr/local/bin/entrypoint.sh
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/renderD128
+      # -------------------------------------------------
+
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_UXRCE_ADDR}
+    container_name:   ${CONTAINER_ROS2_UXRCE_NAME}
+    hostname:         ${CONTAINER_ROS2_UXRCE_HOSTNAME}
+    image:            ${CONTAINER_ROS2_UXRCE_IMAGE}
+
+
+  ros2-node-001:
+    depends_on:
+      - qgc
+      - sim
+      - px4-001
+      - ros2-xrce
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_NODE_001_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_NODE_001_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_NODE_001_ADDR}
+    container_name:   ${CONTAINER_ROS2_NODE_001_NAME}
+    hostname:         ${CONTAINER_ROS2_NODE_001_HOSTNAME}
+    image:            ${CONTAINER_ROS2_NODE_001_IMAGE}
+
+
+networks:
+  sitl-net:
+    name: ${CONTAINER_NET_NAME}
+    driver: bridge
+    ipam:
+      driver: default
+      config: 
+        - subnet:   ${CONTAINER_NET_SUBNET}
+          gateway:  ${CONTAINER_NET_GATEWAY}
+
+# DOCKER COMPOSE UP COMMAND
+# docker compose -f docker-compose.yml --env-file run.env up
