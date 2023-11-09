@@ -1,0 +1,279 @@
+version: "3"
+services:
+  px4-001:
+    depends_on:
+      - qgc
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      QGC_IP:                     ${CONTAINER_QGC_ADDR}
+      ROS2_UXRCE_IP:              ${CONTAINER_ROS2_UXRCE_ADDR}
+      SITL_TYPE:                  ${SITL_TYPE}
+      SITL_AIRFRAME_ID:           ${SITL_AIRFRAME_ID}
+      SITL_AIRFRAME:              ${SITL_AIRFRAME}
+      PX4_SIM_HOST_ADDR:          ${CONTAINER_SIM_ADDR}
+      UXRCE_DDS_CFG:              ${UXRCE_DDS_CFG}
+      PX4_UXRCE_DDS_NS:           ${PX4_UXRCE_DDS_NS}
+      DEBUG_MODE:                 ${PX4_DEBUG_MODE}
+      EXPORT_ENV:                 ${PX4_EXPORT_ENV}
+      # -------------------------------------------------
+    # volumes:
+    #   # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+    #   # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    #   - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
+    #   # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_PX4_ADDR}
+    container_name:   ${CONTAINER_PX4_NAME}
+    hostname:         ${CONTAINER_PX4_HOSTNAME}
+    image:            ${CONTAINER_PX4_IMAGE}
+
+
+  sim:
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      SITL_TYPE:                  ${SITL_TYPE}
+      SITL_AIRFRAME:              ${SITL_AIRFRAME}
+      SITL_WORLD:                 ${SITL_WORLD}
+      PX4_HOME_LAT:               ${PX4_HOME_LAT}     
+      PX4_HOME_LON:               ${PX4_HOME_LON}
+      PX4_HOME_ALT:               ${PX4_HOME_ALT}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      AIRSIM_IP:                  ${BROADCAST_IP}
+      # GAZEBO_USER_MODEL_PATH:     ${GAZEBO_USER_MODEL_PATH}
+      # GAZEBO_USER_RESOURCE_PATH:  ${GZ_SIM_USER_RESOURCE_PATH}
+      HEADLESS:                   ${GAZEBO_HEADLESS}
+      DEBUG_MODE:                 ${SIM_DEBUG_MODE}
+      EXPORT_ENV:                 ${SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+      # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      # - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/renderD128
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_SIM_ADDR}
+    container_name:   ${CONTAINER_SIM_NAME}
+    hostname:         ${CONTAINER_SIM_HOSTNAME}
+    image:            ${CONTAINER_SIM_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  airsim:
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      PIXELSTREAM:                ${PIXELSTREAM}
+      CONTAINER_SIGNALING_ADDR:   ${CONTAINER_SIGNALING_ADDR}
+      CONTAINER_ROS2_AIRSIM_NAME: ${CONTAINER_ROS2_AIRSIM_NAME}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      REBUILD_AIRSIM:             ${REBUILD_AIRSIM}
+      DEBUG_MODE:                 ${AIRSIM_DEBUG_MODE}
+      EXPORT_ENV:                 ${AIRSIM_EXPORT_ENV}
+      # -------------------------------------------------
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${UNREAL_BINARY_DIR}:/home/ue4/binary
+      - /var/run/docker.sock:/var/run/docker.sock
+      # --------SET FOR DEVELOPMENT OR DEBUGGING---------
+      # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+      # - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
+      # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
+    network_mode: host
+    container_name:   ${CONTAINER_AIRSIM_NAME}
+    hostname:         ${CONTAINER_AIRSIM_HOSTNAME}
+    image:            ${CONTAINER_AIRSIM_IMAGE}
+    depends_on:
+      - signalling
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  qgc:
+    privileged: true
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      DISPLAY:                    ${DISPLAY}
+      WAYLAND_DISPLAY:            ${WAYLAND_DISPLAY}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      HEADLESS:                   ${QGC_HEADLESS}
+      # -------------------------------------------------
+    volumes:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      # -------------------------------------------------
+    devices:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      - /dev/dri/card0
+      - /dev/dri/renderD128
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_QGC_ADDR}
+    container_name:   ${CONTAINER_QGC_NAME}
+    hostname:         ${CONTAINER_QGC_HOSTNAME}
+    image:            ${CONTAINER_QGC_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+
+  ros2-xrce:
+    depends_on:
+      - qgc
+      - sim
+      - px4-001
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_XRCE_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_XRCE_SIM_EXPORT_ENV}
+      # ------------------------------------------------- 
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_UXRCE_ADDR}
+    container_name:   ${CONTAINER_ROS2_UXRCE_NAME}
+    hostname:         ${CONTAINER_ROS2_UXRCE_HOSTNAME}
+    image:            ${CONTAINER_ROS2_UXRCE_IMAGE}
+
+
+  ros2-airsim:
+    depends_on:
+      - airsim
+      - qgc
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      AIRSIM_IP:                  ${BROADCAST_IP}
+      DEBUG_MODE:                 ${ROS2_AIRSIM_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_AIRSIM_EXPORT_ENV}
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_AIRSIM_ADDR}
+    container_name:   ${CONTAINER_ROS2_AIRSIM_NAME}
+    hostname:         ${CONTAINER_ROS2_AIRSIM_HOSTNAME}
+    image:            ${CONTAINER_ROS2_AIRSIM_IMAGE}
+
+
+  ros2-node-001:
+    depends_on:
+      - airsim
+      - px4-001
+      - qgc
+      - ros2-airsim
+      - ros2-xrce
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_NODE_001_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_NODE_001_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_NODE_001_ADDR}
+    container_name:   ${CONTAINER_ROS2_NODE_001_NAME}
+    hostname:         ${CONTAINER_ROS2_NODE_001_HOSTNAME}
+    image:            ${CONTAINER_ROS2_NODE_001_IMAGE}
+
+
+  turnserver:
+    image: "coturn/coturn:4.5.2"
+    init: true
+    command: ["-a", "-v", "-n", "-u", "user:password", "-p", "3478", "-r", "default-realm", "--no-dtls", "--no-tls"]
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_COTURN_ADDR}
+
+
+  # The Cirrus signalling server
+  # (Note that we use the short release number, e.g. "5.1" rather than "5.1.0", to match the new signalling server image tagging scheme)
+  signalling:
+    image: "ghcr.io/epicgames/pixel-streaming-signalling-server:4.27"
+    init: true
+    command:
+      - "--publicIp=${BROADCAST_IP}"
+      - >-
+        --peerConnectionOptions={
+            "iceServers":[
+              {
+                "urls": ["stun:stun.l.google.com:19302"]
+              },
+              {
+                "urls": ["turn:${CONTAINER_COTURN_ADDR}:3478"],
+                "username": "user",
+                "credential": "password"
+              }
+            ]
+          }
+    depends_on:
+      - turnserver
+    ports:
+      - 80:80
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_SIGNALING_ADDR}
+
+
+networks:
+  sitl-net:
+    name: ${CONTAINER_NET_NAME}
+    driver: bridge
+    ipam:
+      driver: default
+      config: 
+        - subnet:   ${CONTAINER_NET_SUBNET}
+          gateway:  ${CONTAINER_NET_GATEWAY}
+
+# DOCKER COMPOSE UP COMMAND
+# docker compose -f docker-compose-pixelstream.yml --env-file run-pixelstream up
