@@ -202,7 +202,17 @@ services:
     container_name:   ${CONTAINER_ROS2_NODE_001_NAME}
     hostname:         ${CONTAINER_ROS2_NODE_001_HOSTNAME}
     image:            ${CONTAINER_ROS2_NODE_001_IMAGE}
-
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
 
 networks:
   sitl-net:
