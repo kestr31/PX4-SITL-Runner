@@ -181,8 +181,7 @@ services:
     hostname:         ${CONTAINER_ROS2_UXRCE_HOSTNAME}
     image:            ${CONTAINER_ROS2_UXRCE_IMAGE}
 
-
-  ros2-node-001:
+  ros2-pp:
     depends_on:
       - airsim    
       - px4-001
@@ -193,15 +192,111 @@ services:
       # -----------STATIC VALUE DO NOT MODIFY------------
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
       ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
-      DEBUG_MODE:                 ${ROS2_NODE_001_DEBUG_MODE}
-      EXPORT_ENV:                 ${ROS2_NODE_001_SIM_EXPORT_ENV}
+      DEBUG_MODE:                 ${ROS2_PATH_PLANNING_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_PATH_PLANNING_SIM_EXPORT_ENV}
       # -------------------------------------------------
     networks:
       sitl-net:
-        ipv4_address: ${CONTAINER_ROS2_NODE_001_ADDR}
-    container_name:   ${CONTAINER_ROS2_NODE_001_NAME}
-    hostname:         ${CONTAINER_ROS2_NODE_001_HOSTNAME}
-    image:            ${CONTAINER_ROS2_NODE_001_IMAGE}
+        ipv4_address: ${CONTAINER_ROS2_PATH_PLANNING_ADDR}
+    container_name:   ${CONTAINER_ROS2_PATH_PLANNING_NAME}
+    hostname:         ${CONTAINER_ROS2_PATH_PLANNING_HOSTNAME}
+    image:            ${CONTAINER_ROS2_PATH_PLANNING_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+ros2-pf:
+    depends_on:
+      - airsim    
+      - px4-001
+      - qgc
+      - ros2-xrce
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_PATH_FOLLOWING_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_PATH_FOLLOWING_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_PATH_FOLLOWING_ADDR}
+    container_name:   ${CONTAINER_ROS2_PATH_FOLLOWING_NAME}
+    hostname:         ${CONTAINER_ROS2_PATH_FOLLOWING_HOSTNAME}
+    image:            ${CONTAINER_ROS2_PATH_FOLLOWING_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+ros2-ca:
+    depends_on:
+      - airsim    
+      - px4-001
+      - qgc
+      - ros2-xrce
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_COLLISION_AVOIDANCE_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_COLLISION_AVOIDANCE_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_COLLISION_AVOIDANCE_ADDR}
+    container_name:   ${CONTAINER_ROS2_COLLISION_AVOIDANCE_NAME}
+    hostname:         ${CONTAINER_ROS2_COLLISION_AVOIDANCE_HOSTNAME}
+    image:            ${CONTAINER_ROS2_COLLISION_AVOIDANCE_IMAGE}
+    # -------------SET TO ASSIGN NVIDIA GPU------------
+    # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
+    # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
+
+ros2-ct:
+    depends_on:
+      - airsim    
+      - px4-001
+      - qgc
+      - ros2-xrce
+      - sim
+    environment:
+      # -----------STATIC VALUE DO NOT MODIFY------------
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      DEBUG_MODE:                 ${ROS2_CONTROLLER_DEBUG_MODE}
+      EXPORT_ENV:                 ${ROS2_CONTROLLER_SIM_EXPORT_ENV}
+      # -------------------------------------------------
+    networks:
+      sitl-net:
+        ipv4_address: ${CONTAINER_ROS2_CONTROLLER_ADDR}
+    container_name:   ${CONTAINER_ROS2_CONTROLLER_NAME}
+    hostname:         ${CONTAINER_ROS2_CONTROLLER_HOSTNAME}
+    image:            ${CONTAINER_ROS2_CONTROLLER_IMAGE}
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
