@@ -201,6 +201,8 @@ services:
     container_name:   ${CONTAINER_ROS2_PATH_PLANNING_NAME}
     hostname:         ${CONTAINER_ROS2_PATH_PLANNING_HOSTNAME}
     image:            ${CONTAINER_ROS2_PATH_PLANNING_IMAGE}
+    volumes:
+      - ${PATH_PLANNING_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -233,6 +235,8 @@ ros2-pf:
     container_name:   ${CONTAINER_ROS2_PATH_FOLLOWING_NAME}
     hostname:         ${CONTAINER_ROS2_PATH_FOLLOWING_HOSTNAME}
     image:            ${CONTAINER_ROS2_PATH_FOLLOWING_IMAGE}
+    volumes:
+      - ${PATH_FOLLOWING_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -265,6 +269,8 @@ ros2-ca:
     container_name:   ${CONTAINER_ROS2_COLLISION_AVOIDANCE_NAME}
     hostname:         ${CONTAINER_ROS2_COLLISION_AVOIDANCE_HOSTNAME}
     image:            ${CONTAINER_ROS2_COLLISION_AVOIDANCE_IMAGE}
+    volumes:
+      - ${COLLISION_AVOIDANCE_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -297,6 +303,8 @@ ros2-ct:
     container_name:   ${CONTAINER_ROS2_CONTROLLER_NAME}
     hostname:         ${CONTAINER_ROS2_CONTROLLER_HOSTNAME}
     image:            ${CONTAINER_ROS2_CONTROLLER_IMAGE}
+    volumes:
+      - ${CONTROLLOER_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
