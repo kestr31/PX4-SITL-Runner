@@ -215,7 +215,7 @@ services:
               capabilities: [gpu]
     # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
 
-ros2-pf:
+  ros2-pf:
     depends_on:
       - airsim    
       - px4-001
@@ -249,7 +249,7 @@ ros2-pf:
               capabilities: [gpu]
     # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
 
-ros2-ca:
+  ros2-ca:
     depends_on:
       - airsim    
       - px4-001
@@ -283,7 +283,7 @@ ros2-ca:
               capabilities: [gpu]
     # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿
 
-ros2-ct:
+  ros2-ct:
     depends_on:
       - airsim    
       - px4-001
