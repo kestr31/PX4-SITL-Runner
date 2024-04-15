@@ -105,8 +105,6 @@ services:
       - ${UNREAL_BINARY_DIR}:/home/ue4/binary
       # --------SET FOR DEVELOPMENT OR DEBUGGING---------
       # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
-      # COLLISION AVOIDANCE ROS_2_PUB_depth TEST
-      # - /home/yonghajo/Documents/Unmanned_Vehicle/gitcode_jociiiii/A4VAI-Algorithms-ROS2_exp/CollisionAvoidance:/home/ue4/ros_ws/src
       # - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
       # ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ ︿ 
     networks:
@@ -195,9 +193,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
       ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
       DEBUG_MODE:                 ${ROS2_PATH_PLANNING_DEBUG_MODE}
-      REBUILD_MODE:               ${ROS2_PATH_PLANNING_REBUILD_MODE}
       EXPORT_ENV:                 ${ROS2_PATH_PLANNING_SIM_EXPORT_ENV}
-      ROS2_ALGORITHM:             PATH_PLANNING
       # -------------------------------------------------
     networks:
       sitl-net:
@@ -205,8 +201,8 @@ services:
     container_name:   ${CONTAINER_ROS2_PATH_PLANNING_NAME}
     hostname:         ${CONTAINER_ROS2_PATH_PLANNING_HOSTNAME}
     image:            ${CONTAINER_ROS2_PATH_PLANNING_IMAGE}
-    # volumes:
-    #   - ${PATH_PLANNING_SOURCE_CODE_DIR}:/home/user/ros_ws/src
+    volumes:
+      - ${PATH_PLANNING_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -231,9 +227,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
       ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
       DEBUG_MODE:                 ${ROS2_PATH_FOLLOWING_DEBUG_MODE}
-      REBUILD_MODE:               ${ROS2_PATH_FOLLOWING_REBUILD_MODE}
       EXPORT_ENV:                 ${ROS2_PATH_FOLLOWING_SIM_EXPORT_ENV}
-      ROS2_ALGORITHM:             PATH_FOLLOWING
       # -------------------------------------------------
     networks:
       sitl-net:
@@ -241,8 +235,8 @@ services:
     container_name:   ${CONTAINER_ROS2_PATH_FOLLOWING_NAME}
     hostname:         ${CONTAINER_ROS2_PATH_FOLLOWING_HOSTNAME}
     image:            ${CONTAINER_ROS2_PATH_FOLLOWING_IMAGE}
-    # volumes:
-    #   - ${PATH_FOLLOWING_SOURCE_CODE_DIR}:/home/user/ros_ws/src
+    volumes:
+      - ${PATH_FOLLOWING_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -267,9 +261,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
       ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
       DEBUG_MODE:                 ${ROS2_COLLISION_AVOIDANCE_DEBUG_MODE}
-      REBUILD_MODE:               ${ROS2_COLLISION_AVOIDANCE_REBUILD_MODE}
       EXPORT_ENV:                 ${ROS2_COLLISION_AVOIDANCE_SIM_EXPORT_ENV}
-      ROS2_ALGORITHM:             COLLISION_AVOIDANCE
       # -------------------------------------------------
     networks:
       sitl-net:
@@ -278,7 +270,7 @@ services:
     hostname:         ${CONTAINER_ROS2_COLLISION_AVOIDANCE_HOSTNAME}
     image:            ${CONTAINER_ROS2_COLLISION_AVOIDANCE_IMAGE}
     volumes:
-      - ${COLLISION_AVOIDANCE_SOURCE_CODE_DIR}:/home/user/ros_ws/src
+      - ${COLLISION_AVOIDANCE_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
@@ -303,9 +295,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
       ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
       DEBUG_MODE:                 ${ROS2_CONTROLLER_DEBUG_MODE}
-      REBUILD_MODE:               ${ROS2_CONTROLLER_REBUILD_MODE}
       EXPORT_ENV:                 ${ROS2_CONTROLLER_SIM_EXPORT_ENV}
-      ROS2_ALGORITHM:             CONTROLLER
       # -------------------------------------------------
     networks:
       sitl-net:
@@ -314,7 +304,7 @@ services:
     hostname:         ${CONTAINER_ROS2_CONTROLLER_HOSTNAME}
     image:            ${CONTAINER_ROS2_CONTROLLER_IMAGE}
     volumes:
-      - ${CONTROLLOER_SOURCE_CODE_DIR}:/home/user/ros_ws/src
+      - ${CONTROLLOER_SOURCE_CODE_DIR}:/home/user/px4_ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
