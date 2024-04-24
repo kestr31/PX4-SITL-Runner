@@ -197,6 +197,7 @@ services:
       DEBUG_MODE:                 ${ROS2_PATH_PLANNING_DEBUG_MODE}
       REBUILD_MODE:               ${ROS2_PATH_PLANNING_REBUILD_MODE}
       EXPORT_ENV:                 ${ROS2_PATH_PLANNING_SIM_EXPORT_ENV}
+      MODE:                       ${ROS2_PATH_PLANNING_RUN_MODE}
       ROS2_ALGORITHM:             PATH_PLANNING
       # -------------------------------------------------
     networks:
