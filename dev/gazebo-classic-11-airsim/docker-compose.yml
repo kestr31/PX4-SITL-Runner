@@ -278,8 +278,8 @@ services:
     container_name:   ${CONTAINER_ROS2_COLLISION_AVOIDANCE_NAME}
     hostname:         ${CONTAINER_ROS2_COLLISION_AVOIDANCE_HOSTNAME}
     image:            ${CONTAINER_ROS2_COLLISION_AVOIDANCE_IMAGE}
-    volumes:
-      - ${COLLISION_AVOIDANCE_SOURCE_CODE_DIR}:/home/user/ros_ws/src
+    # volumes:
+    #   - ${COLLISION_AVOIDANCE_SOURCE_CODE_DIR}:/home/user/ros_ws/src
     # -------------SET TO ASSIGN NVIDIA GPU------------
     # ---COMMENT OUT IF YOU DO NOT HAVE A NVIDIA GPU---
     # ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ ﹀ 
