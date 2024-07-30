@@ -276,4 +276,4 @@ networks:
           gateway:  ${CONTAINER_NET_GATEWAY}
 
 # DOCKER COMPOSE UP COMMAND
-# docker compose -f docker-compose-pixelstream.yml --env-file run-pixelstream up
+# docker compose -f docker-compose-pixelstream.yml --env-file run-pixelstream.env up
