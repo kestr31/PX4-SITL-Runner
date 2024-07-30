@@ -123,14 +123,16 @@ elif [ "$1x" == "px4x" ]; then
     # SECOND ARGUMENTS: debug, stop
     usageState2(){
         EchoRed "INVALID INPUT \"$1\". PLEASE USE ARGUMENT AS FOLLOWING:"
-        EchoRed "Usage: $0 px4 [debug]"
+        EchoRed "Usage: $0 px4 [clone|debug|stop]"
+        EchoRed "clone: CLONE PX4-AUTOPILOT REPOSITORY"
         EchoRed "debug: RUN PX4-AUTOPILOT CONTAINER IN DEBUG MODE (sleep infinity)"
         EchoRed "stop:  STOP PX4-AUTOPILOT CONTAINER IF IT IS RUNNING"
         exit 1
     }
 
     # SECOND ARGUMENT CHECK: debug, stop
-    if [ "$2x" != "debugx" ] && \
+    if [ "$2x" != "clonex" ] && \
+       [ "$2x" != "debugx" ] && \
        [ "$2x" != "stopx" ]; then
         usageState2 $2
         exit 1
@@ -151,6 +153,16 @@ elif [ "$1x" == "px4x" ]; then
             if [ "$2x" == "debugx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING PX4-AUTOPILOT CONTAINER IN DEBUG MODE."
                 sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+            elif [ "$2x" == "clonex" ]; then
+                EchoGreen "[$(basename "$0")] CLONE PX4-AUTOPILOT REPOSITORY TO THE PX4_WORKSPACE"
+                EchoGreen "[$(basename "$0")] CONTAINER WILL BE STOPPED AFTER THE PROCESS"
+
+                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+                cp ${BASE_DIR}/px4/clone.sh ${PX4_WORKSPACE}/clone.sh
+                cp -r ${BASE_DIR}/include ${PX4_WORKSPACE}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/clone.sh\"\'~g" ${SITL_ENV_DIR}/px4.env                
             fi
 
             EchoGreen "[$(basename "$0")] RUNNING PX4-AUTOPILOT CONTAINER..."
