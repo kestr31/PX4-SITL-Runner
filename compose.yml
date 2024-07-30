@@ -1,0 +1,217 @@
+services:
+  px4-env:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    image: ${PX4_ENV_IMAGE}
+    container_name: ${PX4_ENV_CONTAINER}
+    environment:
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${PX4_WORKSPACE}:/home/user/workspace
+    network_mode: host
+    hostname: ${PX4_ENV_CONTAINER}
+    entrypoint: ${PX4_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["px4","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    env_file:
+      # - /home/merlin/Documents/A4VAI-SITL/envs/common.env
+      # - /home/merlin/Documents/A4VAI-SITL/envs/px4.env
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/px4.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    devices:
+      - ${DRI_DEVICE_CARD}
+    privileged: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  gz-sim:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    image: ${GAZEBO_CLASSIC_ENV_IMAGE}
+    container_name: ${GAZEBO_CLASSIC_ENV_CONTAINER}
+    environment:
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace
+    network_mode: host
+    hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
+    entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["gazebo-classic","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/gazebo-classic.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    devices:
+      - ${DRI_DEVICE_CARD}
+    privileged: true
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  airsim-binary:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    image:            ${AIRSIM_BINARY_IMAGE}
+    container_name:   ${AIRSIM_BINARY_CONTAINER}
+    environment:
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${AIRSIM_WORKSPACE}:/home/ue4/workspace
+    network_mode: host
+    hostname: ${AIRSIM_BINARY_CONTAINER}
+    entrypoint: ${AIRSIM_RUN_COMMAND}
+    working_dir: /home/ue4/workspace
+    profiles: ["airsim","gazebo-classic-airsim-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/airsim.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  ros2-env:
+    image: ${ROS2_ENV_IMAGE}
+    container_name: ${ROS2_ENV_CONTAINER}
+    environment:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${ROS2_WORKSPACE}:/home/user/workspace
+    network_mode: host
+    hostname: ${ROS2_ENV_CONTAINER}
+    entrypoint: ${ROS2_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["ros2",gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/ros2.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    devices:
+      - /dev/dri/card0
+    privileged: true
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  qgc-app:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    image: ${QGC_ENV_IMAGE}
+    container_name: ${QGC_ENV_CONTAINER}
+    environment:
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${QGC_WORKSPACE}:/home/user/workspace
+    network_mode: host
+    hostname: ${QGC_ENV_CONTAINER}
+    entrypoint: ${QGC_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["qgc",gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/qgc.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    devices:
+      - ${DRI_DEVICE_CARD}
+      - ${DRI_DEVICE_RENDER}
+    privileged: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
