@@ -100,7 +100,7 @@ CheckDirExists(){
         elif [ "$FLAG_GIT" == true ]; then
             EchoYellow "[$(basename "$0")] CLONING THE REPOSITORY TO \"$1\"."
             if [ $# -eq 4 ]; then
-                git clone $3 -b $4 $1
+                git clone $3 -b $4 --recursive $1
             else
                 git clone $3 $1
             fi
