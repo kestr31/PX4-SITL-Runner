@@ -59,7 +59,8 @@ services:
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
-      - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace
+      - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace/gazebo
+      - ${PX4_WORKSPACE}:/home/user/workspace/px4
     network_mode: host
     hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
     entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
@@ -69,6 +70,8 @@ services:
       - path: ./envs/common.env
         required: true
       - path: ./envs/gazebo-classic.env
+        required: true
+      - path: ./envs/px4.env
         required: true
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
@@ -144,7 +147,7 @@ services:
     hostname: ${ROS2_ENV_CONTAINER}
     entrypoint: ${ROS2_RUN_COMMAND}
     working_dir: /home/user/workspace
-    profiles: ["ros2",gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    profiles: ["ros2","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
     env_file:
       - path: ./envs/common.env
         required: true
@@ -187,7 +190,7 @@ services:
     hostname: ${QGC_ENV_CONTAINER}
     entrypoint: ${QGC_RUN_COMMAND}
     working_dir: /home/user/workspace
-    profiles: ["qgc",gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    profiles: ["qgc","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
     env_file:
       - path: ./envs/common.env
         required: true

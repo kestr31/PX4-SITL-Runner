@@ -79,8 +79,7 @@ CheckFileExists ${SITL_ENV_DIR}/qgc.env
 
 # RUN PROCESS PER ARGUMENT
 if [ "$1x" == "gazebo-classic-sitlx" ]; then
-    EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
-    exit 1
+    EchoYellow "[$(basename "$0")] STOPPING GAZEBO-CLASSIC-SITL CONTAINERS..."
 elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
     EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
     exit 1
