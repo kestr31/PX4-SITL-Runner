@@ -32,8 +32,15 @@ CheckDirExists ${PX4_SIM_DIR}
 CheckDirExists ${PX4_BUILD_DIR}
 CheckDirExists ${PX4_BINARY_DIR}
 
+# CHECK IF STRING "MODIFIED NOT TO RUN GAZEBO ON SITL" EXISTS ON ${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh
+while ! grep -q "MODIFIED NOT TO RUN GAZEBO ON SITL" ${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh; do
+    EchoYellow "[$(basename $0)] MODIFIED NOT TO RUN GAZEBO ON SITL NOT FOUND."
+    EchoYellow "[$(basename $0)] WAITING FOR THE SCRIPT TO BE MODIFIED."
+    sleep 0.5s
+done
+
 # RUN GAZEBO SIDE OF THE PX4-SITL
-(${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh \
+(HEADLESS=$1 ${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh \
     ${PX4_BINARY_DIR}/px4 \
     none \
     ${SITL_AIRFRAME} \
