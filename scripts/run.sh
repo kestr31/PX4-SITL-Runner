@@ -114,9 +114,6 @@ sed -i "s~QGC_WORKSPACE=\"\"~QGC_WORKSPACE=${QGC_WORKSPACE}~" ${SITL_ENV_DIR}/qg
 
 
 if [ "$1x" == "gazebo-classic-sitlx" ]; then
-    # EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
-    # exit 1
-
     # SECOND ARGUMENTS: run, debug, stop
     usageState2(){
         EchoRed "INVALID INPUT \"$1\". PLEASE USE ARGUMENT AS FOLLOWING:"
@@ -138,7 +135,7 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh gazebo-classic-sitl
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug
         else
@@ -150,6 +147,10 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
             EchoGreen "[$(basename "$0")] SETTING GAZEBO_CLASSIC_WORKSPACE AS ${GAZEBO_CLASSIC_WORKSPACE}"
             sed -i "s~GAZEBO_CLASSIC_WORKSPACE=\"\"~GAZEBO_CLASSIC_WORKSPACE=${GAZEBO_CLASSIC_WORKSPACE}~" ${SITL_ENV_DIR}/gazebo-classic.env
 
+            # SET ROS2_WORKSPACE TO THE .env FILE
+            EchoGreen "[$(basename "$0")] SETTING ROS2_WORKSPACE AS ${ROS2_WORKSPACE}"
+            sed -i "s~ROS2_WORKSPACE=\"\"~ROS2_WORKSPACE=${ROS2_WORKSPACE}~" ${SITL_ENV_DIR}/ros2.env
+
             # SET QGC_WORKSPACE TO THE .env FILE
             EchoGreen "[$(basename "$0")] SETTING QGC_WORKSPACE AS ${QGC_WORKSPACE}"
             sed -i "s~QGC_WORKSPACE=\"\"~QGC_WORKSPACE=${QGC_WORKSPACE}~" ${SITL_ENV_DIR}/qgc.env
@@ -159,6 +160,10 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
             CheckDirExists ${PX4_WORKSPACE}/scripts/include create
             CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts create
             CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include create
+            CheckDirExists ${ROS2_WORKSPACE}/scripts create
+            CheckDirExists ${ROS2_WORKSPACE}/scripts/include create
+            CheckDirExists ${QGC_WORKSPACE}/scripts create
+            CheckDirExists ${QGC_WORKSPACE}/scripts/include create
 
             # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
             cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
@@ -193,6 +198,102 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
 elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
     EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
     exit 1
+
+    # SECOND ARGUMENTS: run, debug, stop
+    usageState2(){
+        EchoRed "INVALID INPUT \"$1\". PLEASE USE ARGUMENT AS FOLLOWING:"
+        EchoRed "Usage: $0 px4 [clone|build|clean|sitl-gazebo-classic|debug|stop]"
+        EchoRed "run:   RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
+        EchoRed "debug: RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC IN DEBUG MODE (sleep infinity)"
+        EchoRed "stop:  STOP PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC IF IT IS RUNNING"
+        exit 1
+    }
+
+    # SECOND ARGUMENT CHECK: debug, stop
+    if [ "$2x" != "runx" ] && \
+       [ "$2x" != "debugx" ] && \
+       [ "$2x" != "stopx" ]; then
+        usageState2 $2
+        exit 1
+    else
+        # ACTION: stop. STOP THE CONTAINER
+        if [ "$2x" == "stopx" ]; then
+            EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
+            EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
+            ${BASE_DIR}/stop.sh $1
+            exit 0
+        # ACTIONS: debug
+        else
+            # SET PX4_WORKSPACE TO THE .env FILE
+            EchoGreen "[$(basename "$0")] SETTING PX4_WORKSPACE AS ${PX4_WORKSPACE}"
+            sed -i "s~PX4_WORKSPACE=\"\"~PX4_WORKSPACE=${PX4_WORKSPACE}~" ${SITL_ENV_DIR}/px4.env
+
+            # SET GAZEBO_CLASSIC_WORKSPACE TO THE .env FILE
+            EchoGreen "[$(basename "$0")] SETTING GAZEBO_CLASSIC_WORKSPACE AS ${GAZEBO_CLASSIC_WORKSPACE}"
+            sed -i "s~GAZEBO_CLASSIC_WORKSPACE=\"\"~GAZEBO_CLASSIC_WORKSPACE=${GAZEBO_CLASSIC_WORKSPACE}~" ${SITL_ENV_DIR}/gazebo-classic.env
+
+            # SET AIRSIM_WORKSPACE TO THE .env FILE
+            EchoGreen "[$(basename "$0")] SETTING AIRSIM_WORKSPACE AS ${AIRSIM_WORKSPACE}"
+            sed -i "s~AIRSIM_WORKSPACE=\"\"~AIRSIM_WORKSPACE=${AIRSIM_WORKSPACE}~" ${SITL_ENV_DIR}/airsim.env
+
+            # SET QGC_WORKSPACE TO THE .env FILE
+            EchoGreen "[$(basename "$0")] SETTING QGC_WORKSPACE AS ${QGC_WORKSPACE}"
+            sed -i "s~QGC_WORKSPACE=\"\"~QGC_WORKSPACE=${QGC_WORKSPACE}~" ${SITL_ENV_DIR}/qgc.env
+
+            # CREATE SCRIPTS AND INCLUDE DIRECTORIES
+            CheckDirExists ${PX4_WORKSPACE}/scripts create
+            CheckDirExists ${PX4_WORKSPACE}/scripts/include create
+            CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts create
+            CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include create
+            CheckDirExists ${AIRSIM_WORKSPACE}/scripts create
+            CheckDirExists ${AIRSIM_WORKSPACE}/scripts/include create
+            CheckDirExists ${ROS2_WORKSPACE}/scripts create
+            CheckDirExists ${ROS2_WORKSPACE}/scripts/include create
+            CheckDirExists ${QGC_WORKSPACE}/scripts create
+            CheckDirExists ${QGC_WORKSPACE}/scripts/include create
+
+            # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+            cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
+            cp -r ${BASE_DIR}/gazebo-classic/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include
+            cp -r ${BASE_DIR}/airsim/* ${AIRSIM_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${AIRSIM_WORKSPACE}/scripts/include
+            cp -r ${BASE_DIR}/ros2/* ${ROS2_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${ROS2_WORKSPACE}/scripts/include
+
+            # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
+            if [ "$2x" == "debugx" ]; then
+                EchoGreen "[$(basename "$0")] RUNNING GAZEBO-CLASSIC-SITL CONTAINERs IN DEBUG MODE."
+                sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+                sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+                sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
+                sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env
+            elif [ "$2x" == "runx" ]; then
+                EchoGreen "[$(basename "$0")] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
+
+                SCRIPT_NAME="sitl-gazebo-classic.sh"
+
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
+
+                SCRIPT_NAME="sitl-px4.sh"
+
+                CheckFileExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
+                
+                sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
+                sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env
+            fi
+        fi
+    fi
+
 elif [ "$1x" == "px4x" ]; then
     # SECOND ARGUMENTS: debug, stop
     usageState2(){
@@ -221,13 +322,23 @@ elif [ "$1x" == "px4x" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh px4
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug
         else
             # SET PX4_WORKSPACE TO THE .env FILE
             EchoGreen "[$(basename "$0")] SETTING PX4_WORKSPACE AS ${PX4_WORKSPACE}"
             sed -i "s~PX4_WORKSPACE=\"\"~PX4_WORKSPACE=${PX4_WORKSPACE}~" ${SITL_ENV_DIR}/px4.env
+
+            EchoYellow "[$(basename "$0")] COPYING SCRIPTS TO THE PX4_WORKSPACE"
+
+            # CREATE SCRIPTS AND INCLUDE DIRECTORIES
+            CheckDirExists ${PX4_WORKSPACE}/scripts create
+            CheckDirExists ${PX4_WORKSPACE}/scripts/include create
+
+            # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+            cp -r ${BASE_DIR}/$1/* ${PX4_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
 
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
@@ -239,13 +350,8 @@ elif [ "$1x" == "px4x" ]; then
 
                 SCRIPT_NAME="clone.sh"
 
-                # CREATE SCRIPTS AND INCLUDE DIRECTORIES
-                CheckDirExists ${PX4_WORKSPACE}/scripts create
-                CheckDirExists ${PX4_WORKSPACE}/scripts/include create
-
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
-                cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
@@ -255,13 +361,8 @@ elif [ "$1x" == "px4x" ]; then
 
                 SCRIPT_NAME="build.sh"
 
-                # CREATE SCRIPTS AND INCLUDE DIRECTORIES
-                CheckDirExists ${PX4_WORKSPACE}/scripts create
-                CheckDirExists ${PX4_WORKSPACE}/scripts/include create
-
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
-                cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
@@ -271,13 +372,8 @@ elif [ "$1x" == "px4x" ]; then
 
                 SCRIPT_NAME="clean.sh"
 
-                # CREATE SCRIPTS AND INCLUDE DIRECTORIES
-                CheckDirExists ${PX4_WORKSPACE}/scripts create
-                CheckDirExists ${PX4_WORKSPACE}/scripts/include create
-
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
-                cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
@@ -286,13 +382,8 @@ elif [ "$1x" == "px4x" ]; then
 
                 SCRIPT_NAME="sitl-gazebo-classic-standalone.sh"
 
-                # CREATE SCRIPTS AND INCLUDE DIRECTORIES
-                CheckDirExists ${PX4_WORKSPACE}/scripts create
-                CheckDirExists ${PX4_WORKSPACE}/scripts/include create
-
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp -r ${BASE_DIR}/px4/* ${PX4_WORKSPACE}/scripts/
-                cp -r ${BASE_DIR}/include/* ${PX4_WORKSPACE}/scripts/include
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
@@ -324,13 +415,23 @@ elif [ "$1x" == "gazebo-classicx" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh gazebo-classic
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug
         else
             # SET GAZEBO_CLASSIC_WORKSPACE TO THE .env FILE
             EchoGreen "[$(basename "$0")] SETTING GAZEBO_CLASSIC_WORKSPACE AS ${GAZEBO_CLASSIC_WORKSPACE}"
             sed -i "s~GAZEBO_CLASSIC_WORKSPACE=\"\"~GAZEBO_CLASSIC_WORKSPACE=${GAZEBO_CLASSIC_WORKSPACE}~" ${SITL_ENV_DIR}/gazebo-classic.env
+
+            EchoYellow "[$(basename "$0")] COPYING SCRIPTS TO THE GAZEBO_CLASSIC_WORKSPACE"
+
+            # CREATE SCRIPTS AND INCLUDE DIRECTORIES
+            CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts create
+            CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include create
+
+            # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+            cp -r ${BASE_DIR}/$1/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include
 
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
@@ -341,13 +442,8 @@ elif [ "$1x" == "gazebo-classicx" ]; then
 
                 SCRIPT_NAME="sitl-px4.sh"
 
-                # CREATE SCRIPTS AND INCLUDE DIRECTORIES
-                CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts create
-                CheckDirExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include create
-
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp -r ${BASE_DIR}/gazebo-classic/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/
-                cp -r ${BASE_DIR}/include/* ${GAZEBO_CLASSIC_WORKSPACE}/scripts/include
+                CheckFileExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
@@ -384,13 +480,23 @@ elif [ "$1x" == "airsimx" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh airsim
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug, auto, *.sh
         else
             # set AIRSIM_WORKSPACE TO THE .env FILE
             EchoGreen "[$(basename "$0")] SETTING AIRSIM_WORKSPACE AS ${AIRSIM_WORKSPACE}"
             sed -i "s~AIRSIM_WORKSPACE=\"\"~AIRSIM_WORKSPACE=${AIRSIM_WORKSPACE}~" ${SITL_ENV_DIR}/airsim.env
+
+            EchoYellow "[$(basename "$0")] COPYING SCRIPTS TO THE AIRSIM_WORKSPACE"
+
+            # CREATE SCRIPTS AND INCLUDE DIRECTORIES
+            CheckDirExists ${AIRSIM_WORKSPACE}/scripts create
+            CheckDirExists ${AIRSIM_WORKSPACE}/scripts/include create
+
+            # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+            cp -r ${BASE_DIR}/$1/* ${AIRSIM_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${AIRSIM_WORKSPACE}/scripts/include
 
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
@@ -401,16 +507,23 @@ elif [ "$1x" == "airsimx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING AIRSIM CONTAINER IN AUTO MODE."
                 EchoGreen "[$(basename "$0")] AIRSIM CONTAINER WILL FIND AND RUN .sh FILE IN /home/ue4/workspace/binary DIRECTORY."
 
-                cp ${BASE_DIR}/airsim/auto.sh ${AIRSIM_WORKSPACE}/auto.sh
-                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/auto.sh\"\'~g" ${SITL_ENV_DIR}/airsim.env
+                SCRIPT_NAME="auto.sh"
+
+                CheckFileExists ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
             # ACTION: *.sh. RUN THE CONTAINER IN MANUAL MODE (run specific .sh file)
             elif [[ "$2x" == *".shx" ]]; then
                 EchoGreen "[$(basename "$0")] RUNNING AIRSIM CONTAINER WITH $2"
 
-                CheckFileExists ${AIRSIM_DEPLOY_DIR}/$2
-                CheckFileExecutable ${AIRSIM_DEPLOY_DIR}/$2
+                SCRIPT_NAME=$2
 
-                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/$2\"\'~g" ${SITL_ENV_DIR}/airsim.env
+                CheckFileExists ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+
+                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
             fi
 
             EchoGreen "[$(basename "$0")] RUNNING AIRSIM CONTAINER..."
@@ -442,7 +555,7 @@ elif [ "$1x" == "ros2x" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh ros2
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug, build, *.sh
         else
@@ -510,7 +623,7 @@ elif [ "$1x" == "qgcx" ]; then
         if [ "$2x" == "stopx" ]; then
             EchoYellow "[$(basename "$0")] THIS FEATURE IS FOR CONVENIENCE."
             EchoYellow "[$(basename "$0")] IT IS RECOMMENDED TO USE stop.sh SCRIPT TO STOP THE CONTAINER."
-            ${BASE_DIR}/stop.sh qgc
+            ${BASE_DIR}/stop.sh $1
             exit 0
         # ACTIONS: debug
         else
