@@ -185,7 +185,7 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
 
-                SCRIPT_NAME="sitl-px4.sh"
+                SCRIPT_NAME="sitl-px4.sh "
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
                 
@@ -196,8 +196,8 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
     fi
 
 elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
-    EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
-    exit 1
+    # EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
+    # exit 1
 
     # SECOND ARGUMENTS: run, debug, stop
     usageState2(){
@@ -272,7 +272,7 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
             elif [ "$2x" == "runx" ]; then
                 EchoGreen "[$(basename "$0")] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
 
-                SCRIPT_NAME="sitl-gazebo-classic.sh"
+                SCRIPT_NAME="sitl-gazebo-classic-airsim.sh"
 
                 CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
                 CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
@@ -286,9 +286,22 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
                 CheckFileExecutable ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
-                sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
+                sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME} 1\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
                 
-                sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
+                SCRIPT_NAME="auto.sh"
+
+                CheckFileExists ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
+
+                SCRIPT_NAME="sitl-px4-airsim.sh"
+
+                CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                
+                sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                
                 sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env
             fi
         fi
@@ -509,8 +522,8 @@ elif [ "$1x" == "airsimx" ]; then
 
                 SCRIPT_NAME="auto.sh"
 
-                CheckFileExists ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
-                CheckFileExecutable ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+                CheckFileExists ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
                 sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
@@ -520,8 +533,8 @@ elif [ "$1x" == "airsimx" ]; then
 
                 SCRIPT_NAME=$2
 
-                CheckFileExists ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
-                CheckFileExecutable ${AIRSIM_DEPLOY_DIR}/scripts/${SCRIPT_NAME}
+                CheckFileExists ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
             fi
@@ -563,6 +576,16 @@ elif [ "$1x" == "ros2x" ]; then
             EchoGreen "[$(basename "$0")] SETTING ROS2_WORKSPACE AS ${ROS2_WORKSPACE}"
             sed -i "s~ROS2_WORKSPACE=\"\"~ROS2_WORKSPACE=${ROS2_WORKSPACE}~" ${SITL_ENV_DIR}/ros2.env
 
+            EchoYellow "[$(basename "$0")] COPYING SCRIPTS TO THE AIRSIM_WORKSPACE"
+
+            # CREATE SCRIPTS AND INCLUDE DIRECTORIES
+            CheckDirExists ${ROS2_WORKSPACE}/scripts create
+            CheckDirExists ${ROS2_WORKSPACE}/scripts/include create
+
+            # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
+            cp -r ${BASE_DIR}/$1/* ${ROS2_WORKSPACE}/scripts/
+            cp -r ${BASE_DIR}/include/* ${ROS2_WORKSPACE}/scripts/include
+
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING ROS2 CONTAINER IN DEBUG MODE."
@@ -572,29 +595,31 @@ elif [ "$1x" == "ros2x" ]; then
                 EchoGreen "[$(basename "$0")] BUILDING ROS2 PACKAGES INSIDE THE CONTAINER."
                 EchoGreen "[$(basename "$0")] CONTAINER WILL BE STOPPED AFTER THE BUILD PROCESS."
 
-                # COPY BUILD SCRIPT AND FUNCTION DEFINITIONS
-                cp ${BASE_DIR}/ros2/build.sh ${ROS2_WORKSPACE}/build.sh
-                cp -r ${BASE_DIR}/include ${ROS2_WORKSPACE}
+                SCRIPT_NAME="build.sh"
+
+                CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # IF ADDITIONAL DIRECTORIES ARE PROVIDED, PASS THEM TO THE BUILD SCRIPT
                 if [ $# -ge 3 ]; then
                     # DUE TO SED ESCAPE ISSUE, ADDITIONAL ENVIRONMENT VARIABLE IS SET
                     TARGET_ROS2_WORKSPACES=${@:3}
-                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/build.sh ${TARGET_ROS2_WORKSPACES}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/$1/scripts/${SCRIPT_NAME} ${TARGET_ROS2_WORKSPACES}\"\'~g" ${SITL_ENV_DIR}/ros2.env
                 # ELSE, RUN THE BUILD SCRIPT. THIS WILL BUILD ALL PACKAGES IN THE ALL DIRECTORIES THAT HAVE NON-EMPTY 'src' SUBDIRECTORY
                 else
-                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/build.sh\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/$1/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
                 fi 
             # ACTION: *.sh. RUN THE CONTAINER IN MANUAL MODE (RUN SPECIFIC SHELL SCRIPT)
             elif [[ "$2x" == *".shx" ]]; then
                 EchoGreen "[$(basename "$0")] RUNNING ROS2 CONTAINER WITH $2"
 
-                # CHECK IF THE SCRIPT EXISTS AND EXECUTABLE
-                CheckFileExists ${ROS2_WORKSPACE}/$2
-                CheckFileExecutable ${ROS2_WORKSPACE}/$2
+                SCRIPT_NAME=$2
+
+                CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
 
                 # SET THE RUN COMMAND TO THE .env FILE
-                sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/$2\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/$1/$2\"\'~g" ${SITL_ENV_DIR}/ros2.env
             fi
 
             EchoGreen "[$(basename "$0")] RUNNING ROS2 CONTAINER..."

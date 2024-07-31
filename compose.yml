@@ -65,7 +65,54 @@ services:
     hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
     entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
     working_dir: /home/user/workspace
-    profiles: ["gazebo-classic","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    profiles: ["gazebo-classic","gazebo-classic-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/gazebo-classic.env
+        required: true
+      - path: ./envs/px4.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    devices:
+      - ${DRI_DEVICE_CARD}
+    privileged: true
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  gz-sim-airsim:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    image: ${GAZEBO_CLASSIC_ENV_IMAGE}
+    container_name: ${GAZEBO_CLASSIC_ENV_CONTAINER}
+    environment:
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace/gazebo
+      - ${PX4_WORKSPACE}:/home/user/workspace/px4
+      - ${AIRSIM_WORKSPACE}:/home/user/workspace/airsim
+    network_mode: host
+    hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
+    entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["gazebo-classic-airsim-sitl"]
     env_file:
       - path: ./envs/common.env
         required: true
@@ -142,12 +189,56 @@ services:
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
-      - ${ROS2_WORKSPACE}:/home/user/workspace
+      - ${ROS2_WORKSPACE}:/home/user/workspace/ros2
     network_mode: host
     hostname: ${ROS2_ENV_CONTAINER}
     entrypoint: ${ROS2_RUN_COMMAND}
     working_dir: /home/user/workspace
-    profiles: ["ros2","gazebo-classic-sitl","gazebo-classic-airsim-sitl"]
+    profiles: ["ros2","gazebo-classic-sitl"]
+    env_file:
+      - path: ./envs/common.env
+        required: true
+      - path: ./envs/ros2.env
+        required: true
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    #
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # --UNCOMMENT TO ENABLE AMD/INTEL GPU ACCELERATION---
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    devices:
+      - /dev/dri/card0
+    privileged: true
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  ros2-env-airsim:
+    image: ${ROS2_ENV_IMAGE}
+    container_name: ${ROS2_ENV_CONTAINER}
+    environment:
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # ------------STATIC VALUE DO NOT MODIFY-------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      DISPLAY:                    ${SITL_DISPLAY}
+      WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
+      XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+    volumes:
+      - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
+      - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
+      - ${ROS2_WORKSPACE}:/home/user/workspace/ros2
+      - ${AIRSIM_WORKSPACE}:/home/user/workspace/airsim
+    network_mode: host
+    hostname: ${ROS2_ENV_CONTAINER}
+    entrypoint: ${ROS2_RUN_COMMAND}
+    working_dir: /home/user/workspace
+    profiles: ["gazebo-classic-airsim-sitl"]
     env_file:
       - path: ./envs/common.env
         required: true

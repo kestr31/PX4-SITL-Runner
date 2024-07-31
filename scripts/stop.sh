@@ -81,8 +81,7 @@ CheckFileExists ${SITL_ENV_DIR}/qgc.env
 if [ "$1x" == "gazebo-classic-sitlx" ]; then
     EchoYellow "[$(basename "$0")] STOPPING GAZEBO-CLASSIC-SITL CONTAINERS..."
 elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
-    EchoRed "[$(basename "$0")] NOT IMPLEMENTED YET"
-    exit 1
+    EchoYellow "[$(basename "$0")] STOPPING GAZEBO-CLASSIC-AIRSIM-SITL CONTAINERS..."
 elif [ "$1x" == "px4x" ]; then
     EchoYellow "[$(basename "$0")] STOPPING PX4 CONTAINER..."
 elif [ "$1x" == "gazebo-classicx" ]; then
