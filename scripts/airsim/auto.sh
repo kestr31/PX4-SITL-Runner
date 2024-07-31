@@ -34,6 +34,16 @@ EchoBoxLine(){
 # MAIN SCRIPT
 # >>>-------------------------------------------------------------
 
+if [ ! -f /home/ue4/workspace/log ]; then
+    touch /home/ue4/workspace/log
+else
+    echo "" > /home/ue4/workspace/log
+fi
+
+CheckFileExists /home/ue4/workspace/settings.json
+
+ln -s /home/ue4/workspace/settings.json /root/Documents/Airsim/settings.json
+
 # CHECK IF DIRECTORY binary EXISTS
 if [ ! -d /home/ue4/workspace/binary ]; then
     EchoRed "[$(basename "$0")] DIRECTORY binary DOES NOT EXIST. PLEASE CHECK IF THE DIRECTORY EXISTS."
@@ -69,7 +79,7 @@ else
                 EchoGreen "[$(basename "$0")] RUNNING ${SH_FILE}..."
 
                 # RUN THE .sh FILE
-                ${SH_FILE}
+                ${SH_FILE} -windowed > /home/ue4/workspace/log
             fi
         fi
     fi
