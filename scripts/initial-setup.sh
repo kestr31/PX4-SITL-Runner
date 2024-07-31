@@ -29,7 +29,7 @@ QGC_WORKSPACE=${SITL_DEPLOY_DIR}/QGroundControl
 EchoYellow "[$(basename $0)] CONFIGUREING INITIAL CONDITIONS."
 
 # CLONING AND BUILDING PX4-AUTOPILOT
-${BASE_DIR}/run.sh px4 clone.sh
-${BASE_DIR}/run.sh px4 build.sh
+${BASE_DIR}/run.sh px4 clone
+${BASE_DIR}/run.sh px4 build
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
