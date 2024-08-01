@@ -15,29 +15,18 @@ WORKSPACE_DIR=$(dirname $(dirname $(readlink -f "$0")))
 # SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
 source ${BASE_DIR}/include/commonFcn.sh
 source ${BASE_DIR}/include/commonEnv.sh
-
+ 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
 
-CheckDirExists ${WORKSPACE_DIR}/airsim
-CheckDirEmpty ${WORKSPACE_DIR}/airsim
+EchoGreen "[$(basename "$0")] SETTING SOURCE STATEMENT FOR ROS2 WORKSPACE"
+source ${BASE_DIR}/sourceAll.sh
 
-CheckDirExists ${WORKSPACE_DIR}/airsim/install
-CheckFileExists ${WORKSPACE_DIR}/airsim/install/setup.bash
-
-source /opt/ros/${ROS_DISTRO}/setup.bash
-source ${WORKSPACE_DIR}/airsim/install/setup.bash
-
-EchoYellow "[$(basename $0)] STARRTING AIRSIM ROS2 BRIDGE."
-
-while ! grep -q "SimpleFlight" /home/user/workspace/airsim/log; do
-    EchoYellow "[$(basename $0)] WAITING FOR THE AIRSIM TO START."
-    sleep 0.5
-done
-
-ros2 launch airsim_ros_pkgs airsim_node.launch.py
+EchoGreen "[$(basename "$0")] DEBUG MDOE ENABLED FOR ROS2 WORKSPACE"
+EchoGreen "[$(basename "$0")] THIS CONTAINER WILL DO NOTHING WHEN DEPLOYED (sleep infinity)"
+sleep infinity
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

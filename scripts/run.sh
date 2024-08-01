@@ -174,8 +174,59 @@ if [ "$1x" == "gazebo-classic-sitlx" ]; then
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING GAZEBO-CLASSIC-SITL CONTAINERs IN DEBUG MODE."
-                sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
-                sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+                # WHEN NUMBER OF ARGUMENTS IS 2
+                if [ $# -eq 2 ]; then
+                    EchoYellow "[$(basename "$0")] SETTING ALL CONTAINERS IN DEBUG MODE (sleep infinity)"
+                    sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+                    sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+
+                    SCRIPT_NAME="debug.sh"
+                    CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                    CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                    # SET THE RUN COMMAND TO THE .env FILE
+                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+
+                    sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'~g" ${SITL_ENV_DIR}/qgc.env
+                else
+                    # FOR EACH ARGUMENT STARTING FROM THE THIRD ARGUMENT, SET THE COMMAND TO THE .env FILE
+                    for arg in "${@:3}"; do
+                        if [ "${arg}x" == "px4x" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING PX4-AUTOPILOT SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+                        elif [ "${arg}x" == "gazebo-classicx" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING GAZEBO-CLASSIC SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+                        elif [ "${arg}x" == "ros2x" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING ROS2 SITL IN DEBUG MODE (sleep infinity)"
+                            SCRIPT_NAME="debug.sh"
+                            CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                            CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                            # SET THE RUN COMMAND TO THE .env FILE
+                            sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                        elif [ "${arg}x" == "qgcx" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING QGroundControl SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'~g" ${SITL_ENV_DIR}/qgc.env
+                        else
+                            EchoRed "[$(basename "$0")] INVALID INPUT \"$arg\". PLEASE USE ARGUMENT AMONG"
+                            EchoRed "  \"px4\""
+                            EchoRed "  \"gazebo-classic\""
+                            EchoRed "  \"ros2\""
+                            EchoRed "  \"qgc\""
+                            EchoRed  "TO STOP THE CONTAINER SELECTIVELY OR LEAVE IT EMPTY TO STOP EVERYTHING."
+                            exit 1
+                        fi
+                    done
+                fi
+                EchoGreen "[$(basename "$0")] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
+
+                SCRIPT_NAME="sitl-gazebo-classic.sh"
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
+
+                SCRIPT_NAME="sitl-px4.sh "
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
+                
                 sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
                 sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env
             elif [ "$2x" == "runx" ]; then
@@ -265,9 +316,87 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING GAZEBO-CLASSIC-SITL CONTAINERs IN DEBUG MODE."
-                sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
-                sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
-                sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
+                # WHEN NUMBER OF ARGUMENTS IS 2
+                if [ $# -eq 2 ]; then
+                    EchoYellow "[$(basename "$0")] SETTING ALL CONTAINERS IN DEBUG MODE (sleep infinity)"
+                    sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+                    sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+                    sed -i "s/AIRSIM_RUN_COMMAND=\"\"/AIRSIM_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/airsim.env
+
+                    SCRIPT_NAME="debug.sh"
+                    CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                    CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                    # SET THE RUN COMMAND TO THE .env FILE
+                    sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+
+                    sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'~g" ${SITL_ENV_DIR}/qgc.env
+                else
+                    # FOR EACH ARGUMENT STARTING FROM THE THIRD ARGUMENT, SET THE COMMAND TO THE .env FILE
+                    for arg in "${@:3}"; do
+                    echo $arg
+                        if [ "${arg}x" == "px4x" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING PX4-AUTOPILOT SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s/PX4_RUN_COMMAND=\"\"/PX4_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/px4.env
+                        elif [ "${arg}x" == "gazebo-classicx" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING GAZEBO-CLASSIC SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s/GAZEBO_CLASSIC_RUN_COMMAND=\"\"/GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/gazebo-classic.env
+                        elif [ "${arg}x" == "airsimx" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING AIRSIM SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s/AIRSIM_RUN_COMMAND=\"\"/AIRSIM_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/airsim.env
+                        elif [ "${arg}x" == "ros2x" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING ROS2 SITL IN DEBUG MODE (sleep infinity)"
+                            SCRIPT_NAME="debug.sh"
+                            CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                            CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                            # SET THE RUN COMMAND TO THE .env FILE
+                            sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                        elif [ "${arg}x" == "qgcx" ]; then
+                            EchoYellow "[$(basename "$0")] SETTING QGroundControl SITL IN DEBUG MODE (sleep infinity)"
+                            sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'~g" ${SITL_ENV_DIR}/qgc.env
+                        else
+                            EchoRed "[$(basename "$0")] INVALID INPUT \"$arg\". PLEASE USE ARGUMENT AMONG"
+                            EchoRed "  \"px4\""
+                            EchoRed "  \"gazebo-classic\""
+                            EchoRed "  \"airsim\""
+                            EchoRed "  \"ros2\""
+                            EchoRed "  \"qgc\""
+                            EchoRed  "TO STOP THE CONTAINER SELECTIVELY OR LEAVE IT EMPTY TO STOP EVERYTHING."
+                            exit 1
+                        fi
+                    done
+                fi
+                EchoGreen "[$(basename "$0")] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
+
+                SCRIPT_NAME="sitl-gazebo-classic-airsim.sh"
+
+                CheckFileExists ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${PX4_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~PX4_RUN_COMMAND=\"\"~PX4_RUN_COMMAND=\'bash -c \"/home/user/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/px4.env
+
+                SCRIPT_NAME="sitl-px4.sh"
+
+                CheckFileExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${SCRIPT_NAME} 1\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
+                
+                SCRIPT_NAME="auto.sh"
+
+                CheckFileExists ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${AIRSIM_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                sed -i "s~AIRSIM_RUN_COMMAND=\"\"~AIRSIM_RUN_COMMAND=\'bash -c \"/home/ue4/workspace/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/airsim.env
+
+                SCRIPT_NAME="sitl-px4-airsim.sh"
+
+                CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                
+                sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/ros2/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
+                
                 sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env
             elif [ "$2x" == "runx" ]; then
                 EchoGreen "[$(basename "$0")] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
@@ -588,8 +717,13 @@ elif [ "$1x" == "ros2x" ]; then
 
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
-                EchoGreen "[$(basename "$0")] RUNNING ROS2 CONTAINER IN DEBUG MODE."
-                sed -i "s/ROS2_RUN_COMMAND=\"\"/ROS2_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/ros2.env
+                SCRIPT_NAME="debug.sh"
+
+                CheckFileExists ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+                CheckFileExecutable ${ROS2_WORKSPACE}/scripts/${SCRIPT_NAME}
+
+                # SET THE RUN COMMAND TO THE .env FILE
+                sed -i "s~ROS2_RUN_COMMAND=\"\"~ROS2_RUN_COMMAND=\'bash -c \"/home/user/workspace/$1/scripts/${SCRIPT_NAME}\"\'~g" ${SITL_ENV_DIR}/ros2.env
             # ACTION: build. BUILD ROS2 PACKAGES INSIDE THE CONTAINER
             elif [ "$2x" == "buildx" ]; then
                 EchoGreen "[$(basename "$0")] BUILDING ROS2 PACKAGES INSIDE THE CONTAINER."
@@ -659,7 +793,7 @@ elif [ "$1x" == "qgcx" ]; then
             # ACTION: debug. RUN THE CONTAINER IN DEBUG MODE (sleep infinity)
             if [ "$2x" == "debugx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING QGroundControl CONTAINER IN DEBUG MODE."
-                sed -i "s/QGC_RUN_COMMAND=\"\"/QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'/g" ${SITL_ENV_DIR}/qgc.env
+                sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"sleep infinity\"\'~g" ${SITL_ENV_DIR}/qgc.env
             elif [ "$2x" == "runx" ]; then
                 EchoGreen "[$(basename "$0")] RUNNING QGroundControl CONTAINER IN NORMAL MODE."
                 sed -i "s~QGC_RUN_COMMAND=\"\"~QGC_RUN_COMMAND=\'bash -c \"/usr/local/bin/entrypoint.sh\"\'~g" ${SITL_ENV_DIR}/qgc.env

@@ -10,6 +10,7 @@ export TERM=xterm-256color
 
 # SET THE BASE DIRECTORY
 BASE_DIR=$(dirname $(readlink -f "$0"))
+WORKSPACE_DIR=$(dirname $(dirname $(readlink -f "$0")))
 
 # SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
 source ${BASE_DIR}/include/commonFcn.sh
@@ -20,6 +21,8 @@ source ${BASE_DIR}/include/commonEnv.sh
 
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
+
+source ${BASE_DIR}/sourceAll.sh
 
 CheckFileExists ${BASE_DIR}/uxrce-dds.sh
 CheckFileExecutable ${BASE_DIR}/uxrce-dds.sh
