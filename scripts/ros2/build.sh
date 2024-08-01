@@ -10,11 +10,12 @@ export TERM=xterm-256color
 
 # SET THE BASE DIRECTORY
 BASE_DIR=$(dirname $(readlink -f "$0"))
+WORKSPACE_DIR=$(dirname $(dirname $(readlink -f "$0")))
 
 # SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
 source ${BASE_DIR}/include/commonFcn.sh
 source ${BASE_DIR}/include/commonEnv.sh
-
+ 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -26,7 +27,7 @@ rosdep update
 if [ $# -eq 0 ]; then
     # FOR ALL DIRECTORIES IN ${BASE_DIR}
     # FIND ALL DIRECTORIES WHICH HAS SUBDIRECTORY 'src'
-    for dir in $(find ${BASE_DIR} -maxdepth 1 -mindepth 1 -type d)
+    for dir in $(find ${WORKSPACE_DIR} -maxdepth 1 -mindepth 1 -type d)
     do
         # CASE 1: THE DIRECTORY HAS 'src' SUBDIRECTORY
         if [ -d "${dir}/src" ]; then
