@@ -22,14 +22,8 @@ cd PX4-SITL-Runner
   - The workspace is set to `${HOME}/Documents/A4VAI-SITL/Gazebo-Classic` by default.
 - It is a prebuit Gazebo - Airsim bridge with slight modification. (Can read env. var. `AIRSIM_IP`)
   - Please make sure the `GazeboDrone` is executable.
-
-```bash
-# EXAMPLE DIRECTORY STRUCTURE
-tree -d 1 ${HOME}/A4VAI-SITL/Gazebo-Classic/GazeboDrone
-./Gazebo-Classic
-├── GazeboDrone
-...
-```
+  - You can do it by running `chmod +x GazeboDrone`.
+<br>
 
 - Next, place prebuilt ROS packages under the ROS workspace.
   - The workspace is set to `${HOME}/Documents/A4VAI-SITL/ROS2` by default.
@@ -46,14 +40,7 @@ tar -zxvf ${HOME}/Documents/A4VAI-SITL/ROS2/px4_ros.tar.gz -C ${HOME}/Documents/
 - The directory name of the binary must be `binary`.
   - The `*.sh` script inside the `binary` directory must be executable.
 
-```bash
-# EXAMPLE DIRECTORY STRUCTURE
-tree -d 1 ${HOME}/A4VAI-SITL/gazebo-classic/GazeboDrone
-./AirSim
-├── binary
-├── settings.json
-...
-```
+<br/>
 
 - Everything is now set up.
 - Make sure to enter `xhost +` on each reboot to allow the container to access the host's display.
