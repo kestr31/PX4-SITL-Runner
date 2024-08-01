@@ -14,8 +14,8 @@ git clone https://github.com/kestr31/PX4-SITL-Runner.git
 
 ```bash
 cd PX4-SITL-Runner
-./script/run.sh px4 clone
-./script/run.sh px4 build
+./scripts/run.sh px4 clone
+./scripts/run.sh px4 build
 ```
 
 - Next, place the `GazeboDrone` under the Gazebo-Classic workspace.
