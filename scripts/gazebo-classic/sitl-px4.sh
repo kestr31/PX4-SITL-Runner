@@ -39,6 +39,15 @@ while ! grep -q "MODIFIED NOT TO RUN GAZEBO ON SITL" ${PX4_SIM_DIR}/gazebo-class
     sleep 0.5s
 done
 
+cp -r /home/user/workspace/gazebo/media/* /usr/share/gazebo-11/media
+cp -r /home/user/workspace/gazebo/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
+
+if [ -f /home/user/workspace/gazebo/worlds/${SITL_WORLD}.sh ]; then
+    EchoYellow "[$(basename $0)] ADDITIONAL SETUP SCRIPT ${SITL_WORLD}.sh FOUND."
+    EcgYellow "[$(basename $0)] RUNNING ${SITL_WORLD}.sh."
+    /home/user/workspace/gazebo/worlds/${SITL_WORLD}.sh
+fi
+
 # RUN GAZEBO SIDE OF THE PX4-SITL
 (HEADLESS=$1 ${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh \
     ${PX4_BINARY_DIR}/px4 \

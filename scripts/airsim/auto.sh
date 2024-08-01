@@ -1,34 +1,19 @@
 #!/bin/bash
 
-# FUNCTION TO ECHO INPUT IN GREEN
-# >>>-------------------------------------------------------------
-# INPUTS:
-# $1: INPUT TO ECHO
-# ----------------------------------------------------------------
-EchoGreen(){
-    echo -e "\e[32m$1\e[0m"
-}
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# INITIAL STATEMENTS
+# >>>----------------------------------------------------
 
+# SET THE BASIC ENVIRONMENT VARIABLE
+export TERM=xterm-256color
 
-# FUNCTION TO ECHO INPUT IN RED
-# >>>-------------------------------------------------------------
-# INPUTS:
-# $1: INPUT TO ECHO
-# ----------------------------------------------------------------
-EchoRed(){
-    echo -e "\e[31m$1\e[0m"
-}
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# SET THE BASE DIRECTORY
+BASE_DIR=$(dirname $(readlink -f "$0"))
 
+# SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
+source ${BASE_DIR}/include/commonFcn.sh
+source ${BASE_DIR}/include/commonEnv.sh
 
-# FUNCTION TO PRINT A LINE OF BOXLINES
-# >>>-------------------------------------------------------------
-EchoBoxLine(){
-    echo $(printf '%.s─' $(seq 1 $(tput cols)))
-}
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 # MAIN SCRIPT
@@ -42,7 +27,8 @@ fi
 
 CheckFileExists /home/ue4/workspace/settings.json
 
-ln -s /home/ue4/workspace/settings.json /root/Documents/Airsim/settings.json
+mkdir -p /home/ue4/Documents/AirSim create
+ln -s /home/ue4/workspace/settings.json /home/ue4/Documents/AirSim/settings.json
 
 # CHECK IF DIRECTORY binary EXISTS
 if [ ! -d /home/ue4/workspace/binary ]; then
