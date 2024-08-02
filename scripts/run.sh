@@ -539,8 +539,8 @@ elif [ "$1x" == "gazebo-classicx" ]; then
     # SECOND ARGUMENTS: debug, stop
     usageState2(){
         EchoRed "INVALID INPUT \"$1\". PLEASE USE ARGUMENT AS FOLLOWING:"
-        EchoRed "Usage: $0 gazebo-classic [sitl-px4|debug]"
-        EchoRed "sitl:  RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
+        EchoRed "Usage: $0 gazebo-classic [sitl-px4|debug|stop]"
+        EchoRed "sitl-px4:  RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
         EchoRed "debug: RUN GAZEBO-CLASSIC CONTAINER IN DEBUG MODE (sleep infinity)"
         EchoRed "stop:  STOP GAZEBO-CLASSIC CONTAINER IF IT IS RUNNING"
         exit 1
