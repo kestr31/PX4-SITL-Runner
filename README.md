@@ -1,65 +1,35 @@
-# Containerized PX4 SITL Run Script
 
-## Initial Setup
+# Containerized PX4 SITL Simulation & Development Script Tools
 
-- Clone this repository
+## Description
 
-```bash
-git clone https://github.com/kestr31/PX4-SITL-Runner.git
-```
+[![en](https://img.shields.io/badge/lang-en-red.svg)](./README.md)
+[![kr](https://img.shields.io/badge/lang-kr-blue.svg)](./README-KR.md)
 
-- Move to the cloned repository
-- Then, run the following command to clone and build the PX4 SITL.
-- The assets will be located under `${HOME}/PX4-SITL-Runner/px4` by default.
+- This repository is a collection of scripts and tools for containerized PX4 SITL simulation and development.
+- The scripts and tools in this repository provides improved usability and convenience for PX4 SITL simulation and development.
 
-```bash
-cd PX4-SITL-Runner
-./scripts/run.sh px4 clone
-./scripts/run.sh px4 build
-```
+## Documentation
 
-- Next, place the `GazeboDrone` under the Gazebo-Classic workspace.
-  - The workspace is set to `${HOME}/Documents/A4VAI-SITL/Gazebo-Classic` by default.
-- It is a prebuit Gazebo - Airsim bridge with slight modification. (Can read env. var. `AIRSIM_IP`)
-  - Please make sure the `GazeboDrone` is executable.
-  - You can do it by running `chmod +x GazeboDrone`.
-<br>
+- Please refer to the [repository wiki](https://github.com/kestr31/PX4-SITL-Runner/wiki) for detailed documentation.
 
-- Next, place prebuilt ROS packages under the ROS workspace.
-  - The workspace is set to `${HOME}/Documents/A4VAI-SITL/ROS2` by default.
-- Packages are provieded in `*.tar.gz` format.
-  - Please extract the packages under the workspace.
+## Prerequisites
 
-```bash
-tar -zxvf ${HOME}/Documents/A4VAI-SITL/ROS2/airsim.tar.gz -C ${HOME}/Documents/A4VAI-SITL/ROS2
-tar -zxvf ${HOME}/Documents/A4VAI-SITL/ROS2/px4_ros.tar.gz -C ${HOME}/Documents/A4VAI-SITL/ROS2
-```
+### HW & OS-Specific Requirements
 
-- Lastly, place AirSim Unreal binary and `settings.json` under the AirSim workspace.
-  - The workspace is set to `${HOME}/Documents/A4VAI-SITL/AirSim` by default.
-- The directory name of the binary must be `binary`.
-  - The `*.sh` script inside the `binary` directory must be executable.
+- AMD64(x64) Based Linux System (Recommends Ubuntu 22.04 LTS)
+- Nvidia GPU (≥ RTX 20 Ampere)
+- 512 GB Storage (Recommends SSD)
+- Network Connection (For downloading external resources)
+- Desktop Environment (=Physical Display or Equivalent)
 
-<br/>
+### SW Requirements
 
-- Everything is now set up.
-- Make sure to enter `xhost +` on each reboot to allow the container to access the host's display.
-- You can now run the PX4 SITL with the following command.
+- `sudo` permission
+- Docker & Docker Compsoe
+- Nvidia Proprietary Driver
+- Nvidia Container Toolkit
 
-```bash
-xhost +
-./scripts/run.sh gazebo-classic-airsim-sitl run
-```
+# License
 
-- You can kill the PX4 SITL with the following command.
-
-```bash
-./scripts/run.sh gazebo-classic-airsim-sitl run
-```
-
-- If you need a "debug", you can halt every container with the following command.
-- Every container will run with entrypoint `sleep infinity`.
-
-```bash
-./scripts/run.sh gazebo-classic-airsim-sitl debug
-```
+- This repository is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
