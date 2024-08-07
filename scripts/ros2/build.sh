@@ -61,10 +61,10 @@ if [ $# -eq 0 ]; then
         fi
     done
 else
-    for dir in "$@"
+    for dir in "${WORKSPACE_DIR}/$@"
     do
-        CheckDirExists ./${dir}
-        CheckDirEmpty ./${dir}/src
+        CheckDirExists ${dir}
+        CheckDirEmpty ${dir}/src
 
         EchoGreen "[$(basename "$0")] BUILDING PACKAGES INSIDE ${dir}"
 

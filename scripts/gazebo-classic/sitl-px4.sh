@@ -39,8 +39,21 @@ while ! grep -q "MODIFIED NOT TO RUN GAZEBO ON SITL" ${PX4_SIM_DIR}/gazebo-class
     sleep 0.5s
 done
 
-cp -r /home/user/workspace/gazebo/media/* /usr/share/gazebo-11/media
-cp -r /home/user/workspace/gazebo/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
+if [ -d /home/user/workspace/gazebo/media ]; then
+    if [ -z "$(ls -A /home/user/workspace/gazebo/media)" ]; then
+        EchoYellow "[$(basename $0)] /home/user/workspace/gazebo/media IS EMPTY."
+    else
+        cp -r /home/user/workspace/gazebo/media/* /usr/share/gazebo-11/media
+    fi
+fi
+
+if [ -d /home/user/workspace/gazebo/worlds ]; then
+    if [ ! -f "$(ls -A /home/user/workspace/gazebo/worlds/*.world)" ]; then
+        EchoYellow "[$(basename $0)] /home/user/workspace/gazebo/worlds DOES NOT CONTAIN ANY .world FILES."
+    else
+        cp -r /home/user/workspace/gazebo/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
+    fi
+fi
 
 if [ -f /home/user/workspace/gazebo/worlds/${SITL_WORLD}.sh ]; then
     EchoYellow "[$(basename $0)] ADDITIONAL SETUP SCRIPT ${SITL_WORLD}.sh FOUND."
