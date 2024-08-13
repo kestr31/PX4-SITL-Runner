@@ -30,9 +30,17 @@ CheckFileExecutable ${BASE_DIR}/uxrce-dds.sh
 CheckFileExists ${BASE_DIR}/airsim-bridge.sh
 CheckFileExecutable ${BASE_DIR}/airsim-bridge.sh
 
-${BASE_DIR}/uxrce-dds.sh &
+# CREATE DIRECTORY FOR LOGS
+CheckDirExists ${WORKSPACE_DIR}/logs create
+rm -rf ${WORKSPACE_DIR}/logs/*
 
-${BASE_DIR}/airsim-bridge.sh &
+# CREATE LOG FILES
+touch ${WORKSPACE_DIR}/logs/uxrce-dds.log
+touch ${WORKSPACE_DIR}/logs/airsim-bridge.log
+
+# RUN THE SHELL SCRIPTS AND LOG THE OUTPUT
+${BASE_DIR}/uxrce-dds.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/uxrce-dds.log &
+${BASE_DIR}/airsim-bridge.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/airsim-bridge.log &
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -48,8 +56,6 @@ ${BASE_DIR}/airsim-bridge.sh &
 #   source /home/user/workspace/ros2/alg_ws/install/setup.bash
 #   ros2 run algorithm1 algorithm1_node
 # CHECK uxrce-dds.sh, airsim-bridge.sh, AND THIS SCRIPT FOR EXAMPLES
-
-
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
