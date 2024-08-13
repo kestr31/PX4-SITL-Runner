@@ -26,8 +26,8 @@ else
 fi
 
 CheckFileExists /home/ue4/workspace/settings.json
+CheckDirExists /home/ue4/Documents/AirSim create
 
-mkdir -p /home/ue4/Documents/AirSim create
 ln -s /home/ue4/workspace/settings.json /home/ue4/Documents/AirSim/settings.json
 
 # CHECK IF DIRECTORY binary EXISTS
@@ -65,7 +65,7 @@ else
                 EchoGreen "[$(basename "$0")] RUNNING ${SH_FILE}..."
 
                 # RUN THE .sh FILE
-                ${SH_FILE} -windowed > /home/ue4/workspace/log
+                su -c "${SH_FILE} -windowed" ue4 > /home/ue4/workspace/log
             fi
         fi
     fi

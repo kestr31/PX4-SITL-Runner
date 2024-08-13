@@ -145,6 +145,7 @@ services:
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     image:            ${AIRSIM_BINARY_IMAGE}
     container_name:   ${AIRSIM_BINARY_CONTAINER}
+    user:             root
     environment:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
