@@ -10,13 +10,14 @@ export TERM=xterm-256color
 BASE_DIR=$(dirname $(readlink -f "$0"))
 
 # SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
-source ${BASE_DIR}/include/commonFcn.sh
-source ${BASE_DIR}/include/commonEnv.sh
-
+for file in ${BASE_DIR}/include/*.sh; do
+    source ${file}
+done
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # SET ENVIRONMENT VARIABLES
 PX4_WORKSPACE=/home/user/workspace/px4
+GAZEBO_WORKSPACE=/home/user/workspace/gazebo
 
 PX4_SOURCE_DIR=${PX4_WORKSPACE}/PX4-Autopilot
 PX4_SIM_DIR=${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation
@@ -39,27 +40,37 @@ while ! grep -q "MODIFIED NOT TO RUN GAZEBO ON SITL" ${PX4_SIM_DIR}/gazebo-class
     sleep 0.5s
 done
 
-if [ -d /home/user/workspace/gazebo/media ]; then
-    if [ -z "$(ls -A /home/user/workspace/gazebo/media)" ]; then
-        EchoYellow "[$(basename $0)] /home/user/workspace/gazebo/media IS EMPTY."
+# COPY GAZEBO RESOURCES IF THEY EXIST
+if [ -d ${GAZEBO_WORKSPACE}/media ]; then
+    if [ -z "$(ls -A ${GAZEBO_WORKSPACE}/media)" ]; then
+        EchoYellow "[$(basename $0)] ${GAZEBO_WORKSPACE}/media IS EMPTY."
     else
-        cp -r /home/user/workspace/gazebo/media/* /usr/share/gazebo-11/media
+        cp -r ${GAZEBO_WORKSPACE}/media/* /usr/share/gazebo-11/media
     fi
 fi
 
-if [ -d /home/user/workspace/gazebo/worlds ]; then
-    if [ ! -f "$(ls -A /home/user/workspace/gazebo/worlds/*.world)" ]; then
-        EchoYellow "[$(basename $0)] /home/user/workspace/gazebo/worlds DOES NOT CONTAIN ANY .world FILES."
+# COPY GAZEBO WORLDS IF THEY EXIST
+if [ -d ${GAZEBO_WORKSPACE}/worlds ]; then
+    if [ ! -f "$(ls -A ${GAZEBO_WORKSPACE}/worlds/*.world)" ]; then
+        EchoYellow "[$(basename $0)] ${GAZEBO_WORKSPACE}/worlds DOES NOT CONTAIN ANY .world FILES."
     else
-        cp -r /home/user/workspace/gazebo/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
+        cp -r ${GAZEBO_WORKSPACE}/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
     fi
 fi
 
-if [ -f /home/user/workspace/gazebo/worlds/${SITL_WORLD}.sh ]; then
+# RUN ADDITIONAL SETUP SCRIPT IF IT EXISTS
+if [ -f ${GAZEBO_WORKSPACE}/worlds/${SITL_WORLD}.sh ]; then
     EchoYellow "[$(basename $0)] ADDITIONAL SETUP SCRIPT ${SITL_WORLD}.sh FOUND."
     EcgYellow "[$(basename $0)] RUNNING ${SITL_WORLD}.sh."
-    /home/user/workspace/gazebo/worlds/${SITL_WORLD}.sh
+    ${GAZEBO_WORKSPACE}/worlds/${SITL_WORLD}.sh
 fi
+
+# CREATE DIRECTORY FOR LOGS
+CheckDirExists ${GAZEBO_WORKSPACE}/logs create
+rm -rf ${GAZEBO_WORKSPACE}/logs/*
+
+# CREATE LOG FILES
+touch ${GAZEBO_WORKSPACE}/logs/gazebo.log
 
 # RUN GAZEBO SIDE OF THE PX4-SITL
 (HEADLESS=$1 ${PX4_SIM_DIR}/gazebo-classic/sitl_run.sh \
@@ -68,7 +79,7 @@ fi
     ${SITL_AIRFRAME} \
     ${SITL_WORLD} \
     ${PX4_SOURCE_DIR} \
-    ${PX4_BUILD_DIR})
+    ${PX4_BUILD_DIR}) 2>&1 | tee ${GAZEBO_WORKSPACE}/logs/gazebo.log &
 
 sleep infinity
 
