@@ -22,13 +22,10 @@ done
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
 
-EchoGreen "[$(basename "$0")] SETTING SOURCE STATEMENT FOR ROS2 WORKSPACE"
-source ${BASE_DIR}/sourceAll.sh
-
-EchoGreen "[$(basename "$0")] DEBUG MDOE ENABLED FOR ROS2 WORKSPACE"
+EchoGreen "[$(basename "$0")] DEBUG MDOE ENABLED FOR AIRSIM WORKSPACE"
 EchoGreen "[$(basename "$0")] THIS CONTAINER WILL DO NOTHING WHEN DEPLOYED (sleep infinity)"
 EchoGreen "[$(basename "$0")] YOU CAN WORK INSIDE THE CONTAINER BY FOLLOWING METHODS:"
-EchoGreen "[$(basename "$0")] *   1. BY ATTACHING TERMINAL BY 'docker exec -it ros2-env bash'"
+EchoGreen "[$(basename "$0")] *   1. BY ATTACHING TERMINAL BY 'docker exec -it qgc-app bash'"
 EchoGreen "[$(basename "$0")] *   2. BY USING VISUAL STUDIO CODE \"REMOTE DEV\" EXTENSION"
 
 sleep infinity

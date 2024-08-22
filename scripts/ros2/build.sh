@@ -13,9 +13,9 @@ BASE_DIR=$(dirname $(readlink -f "$0"))
 WORKSPACE_DIR=$(dirname $(dirname $(readlink -f "$0")))
 
 # SOURCE THE ENVIRONMENT AND FUNCTION DEFINITIONS
-source ${BASE_DIR}/include/commonFcn.sh
-source ${BASE_DIR}/include/commonEnv.sh
- 
+for file in ${BASE_DIR}/include/*.sh; do
+    source ${file}
+done
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
