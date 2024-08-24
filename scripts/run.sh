@@ -118,6 +118,7 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
     declare -A usageState2
     usageState2["run"]="RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
     usageState2["debug"]="RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC IN DEBUG MODE (OPTION: SERVICE(S) TO STOP)"
+    usageState2["test"]="UNIT TEST INDIVIDUAL ALGORITHMS IN GAEBZO-CLASSIC-AIRSIM SITL ENVORONMENT"
     usageState2["stop"]="STOP PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC IF IT IS RUNNING"
     
     CheckValidity $0 usageState2 2 "$@"
@@ -187,6 +188,54 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
         SetRunModeAirSim $0 gazebo-classic-airsim-sitl
         SetRunModeROS2 $0 gazebo-classic-airsim-sitl
         SetRunModeQGC $0 normal
+    # ACTION: test. UNIT TEST INDIVIDUAL ALGORITHMS IN GAZEBO-CLASSIC-AIRSIM SITL ENVIRONMENT
+    elif [ "$2x" == "testx" ]; then
+        # INPUT STATEMENT 3 VALIDITY CHECK
+        # >>>----------------------------------------------------
+        declare -A usageState3
+        usageState3["path-planning"]="RUNNING PATH PLANNIG UNIT TEST"
+        usageState3["path-following"]="RUNNING PATH FOLLOWING UNIT TEST"
+        usageState3["collision-avoidance"]="RUNNING COLLISION AVOIDANCE UNIT TEST"
+
+        CheckValidity $0 usageState3 3 "$@"
+        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+        # RUN FOR EACH ARGUMENT
+        # >>>----------------------------------------------------
+        # ACTION: path-planning. RUN PATH PLANNING UNIT TEST
+        if [ "$3x" == "path-planningx" ]; then
+            # DO NOT ALLOW ADDITIONAL ARGUMENTS FOR THIS ACTION
+            LimitNumArgument $0 3 "$@"
+            EchoGreen "[$(basename "$0")] RUNNING PATH PLANNING UNIT TEST"
+            SetRunModePX4 $0 debug
+            SetRunModeGazeboClassic $0 debug
+            SetRunModeAirSim $0 debug
+            SetRunModeROS2 $0 path-planning-unit-test.sh
+            SetRunModeQGC $0 debug
+
+        # ACTION: path-following. RUN PATH FOLLOWING UNIT TEST
+        elif [ "$3x" == "path-followingx" ]; then
+            # DO NOT ALLOW ADDITIONAL ARGUMENTS FOR THIS ACTION
+            LimitNumArgument $0 3 "$@"
+            EchoGreen "[$(basename "$0")] RUNNING PATH FOLLOWING UNIT TEST"
+            SetRunModePX4 $0 gazebo-classic-airsim-sitl
+            SetRunModeGazeboClassic $0 gazebo-classic-airsim-sitl
+            SetRunModeAirSim $0 gazebo-classic-airsim-sitl
+            SetRunModeROS2 $0 path-following-unit-test.sh
+            SetRunModeQGC $0 normal
+        
+        # ACTION: collision-avoidance. RUN COLLISION AVOIDANCE UNIT TEST
+        elif [ "$3x" == "collision-avoidancex" ]; then
+            # DO NOT ALLOW ADDITIONAL ARGUMENTS FOR THIS ACTION
+            LimitNumArgument $0 3 "$@"
+            EchoGreen "[$(basename "$0")] RUNNING COLLISION AVOIDANCE UNIT TEST"
+            SetRunModePX4 $0 gazebo-classic-airsim-sitl
+            SetRunModeGazeboClassic $0 gazebo-classic-airsim-sitl
+            SetRunModeAirSim $0 gazebo-classic-airsim-sitl
+            SetRunModeROS2 $0 collision-avoidance-unit-test.sh
+            SetRunModeQGC $0 normal
+        fi
+        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     fi
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 elif [ "$1x" == "px4x" ]; then
