@@ -48,6 +48,31 @@ ${BASE_DIR}/airsim-bridge.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/airsim-bridge.log 
 # USER-DEFINED SATEMENTS
 # >>>----------------------------------------------------
 
+# pip install msgpack-rpc-python 
+# pip install airsim
+
+# pip install torch
+
+touch ${WORKSPACE_DIR}/logs/uxrce-dds.log
+touch ${WORKSPACE_DIR}/logs/airsim-bridge.log
+touch ${WORKSPACE_DIR}/logs/controller.log
+touch ${WORKSPACE_DIR}/logs/Plan2WP.log
+touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
+touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
+touch ${WORKSPACE_DIR}/logs/collision_avoidance.log
+touch ${WORKSPACE_DIR}/logs/pub_depth.log
+touch ${WORKSPACE_DIR}/logs/plot.log
+
+mkdir -p /home/user/workspace/ros2/ros2_ws/log/point_mass_6d/datalogfile
+
+ros2 run controller controller 2>&1 | tee ${WORKSPACE_DIR}/logs/controller.log &
+ros2 run pathplanning Plan2WP 2>&1 | tee ${WORKSPACE_DIR}/logs/Plan2WP.log &
+ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
+ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
+ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
+ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
+ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
+
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws
