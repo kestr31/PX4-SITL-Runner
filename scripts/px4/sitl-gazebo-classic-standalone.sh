@@ -23,6 +23,8 @@ source ${BASE_DIR}/include/commonEnv.sh
 
 CheckDirExists "PX4-Autopilot"
 
+${BASE_DIR}/setGCS.sh
+${BASE_DIR}/setDDS.sh
 (cd PX4-Autopilot || exit 1; make px4_sitl gazebo-classic)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

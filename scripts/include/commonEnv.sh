@@ -3,6 +3,11 @@
 # >>>----------------------------------------------------
 SITL_DEPLOY_DIR=${HOME}/Documents/A4VAI-SITL
 GAEZBO_HEADLESS=true
+
+SITL_NETWORK_NAME=sitl_network
+SITL_NETWORK_SUBNET=172.70.0.0/16
+
+SITL_ROS_DOMAIN_ID="" # IF NOT SET, THIS WILL BE RANDOMLY GENERATED
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 

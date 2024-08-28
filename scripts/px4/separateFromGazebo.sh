@@ -69,7 +69,7 @@ while ! grep -q "SimpleFlight" /home/user/workspace/airsim/log; do
     sleep 0.5
 done
 
-/home/user/workspace/gazebo/GazeboDrone >> /dev/null 2>&1 &
+/home/user/workspace/gazebo/GazeboDrone ${AIRSIM_IP} >> /dev/null 2>&1 &
 
 EOF
 fi

@@ -24,6 +24,20 @@ BasicSetup() {
     # SET DISPLAY AND AUDIO-RELATED ENVIRONMENT VARIABLES TO THE .env FILE
     SetComposeDisplay ${SITL_ENV_DIR}/common.env
 
+    EchoGreen "[$(basename "$0")] [ROS_DOMAIN_ID SETUP]"
+
+    # SET ROS_DOMAIN_ID TO THE .env FILE
+    # IF ROS_DOMAIN_ID IS BLANK STRING, RANDOMLY GENERATE A VALUE BETWEEN 0 - 101
+    if [ -z "${SITL_ROS_DOMAIN_ID}" ]; then
+        ROS_DOMAIN_ID=$(shuf -i 0-101 -n 1)
+        EchoYellow "[$(basename "$0")] ROS_DOMAIN_ID IS NOT SET. RANDOMLY GENERATING A VALUE BETWEEN 0 - 101"
+        EchoYellow "[$(basename "$0")] GENERATED ROS_DOMAIN_ID: ${ROS_DOMAIN_ID}"
+    fi
+
+    EchoGreen "[$(basename "$0")] SETTING ROS_DOMAIN_ID AS ${ROS_DOMAIN_ID}"
+    sed -i "s~ROS_DOMAIN_ID=\"\"~ROS_DOMAIN_ID=${ROS_DOMAIN_ID}~" ${SITL_ENV_DIR}/common.env
+
+    EchoBoxLine
 
     # SET WORKSPACE VARIABLES
     EchoGreen "[$(basename "$0")] [WORKSPACE SETUP - COMPOSE .env FILES]"
@@ -76,6 +90,40 @@ BasicSetup() {
     cp -r ${BASE_DIR}/include/* ${ROS2_WORKSPACE}/scripts/include
     cp -r ${BASE_DIR}/qgc/* ${QGC_WORKSPACE}/scripts/
     cp -r ${BASE_DIR}/include/* ${QGC_WORKSPACE}/scripts/include
+
+    EchoBoxLine
+
+
+    EchoGreen "[$(basename "$0")] [NETWORK SETUP]"
+
+    # SET BASEICN NETWORK INFO
+    # MODIFY SITL_NETWORK_NAME="" TO VALUE OF SITL_NETWORK_NAME
+    # MODIFY SITL_NETWORK_SUBNET="" TO VALUE OF SITL_NETWORK_SUBNET
+    sed -i "s~SITL_NETWORK_NAME=\"\"~SITL_NETWORK_NAME=\"${SITL_NETWORK_NAME}\"~" ${SITL_ENV_DIR}/common.env
+    sed -i "s~SITL_NETWORK_SUBNET=\"\"~SITL_NETWORK_SUBNET=\"${SITL_NETWORK_SUBNET}\"~" ${SITL_ENV_DIR}/common.env
+
+    # DETACH /16 SUBNET FROM THE NETWORK
+    BASE_IP=$(echo ${SITL_NETWORK_SUBNET} | cut -d '.' -f1-3)
+
+    # SET CONTAINER IP ADDRESSES
+    PX4_IP=${BASE_IP}.2
+    GAZEBO_CLASSIC_IP=${BASE_IP}.3
+    AIRSIM_IP=${BASE_IP}.4
+    ROS2_IP=${BASE_IP}.5
+    QGC_IP=${BASE_IP}.6
+
+    # SET CONTAINER IP ADDRESSES
+    sed -i "s~PX4_IP=\"\"~PX4_IP=\"${PX4_IP}\"~" ${SITL_ENV_DIR}/px4.env
+    sed -i "s~GAZEBO_CLASSIC_IP=\"\"~GAZEBO_CLASSIC_IP=\"${GAZEBO_CLASSIC_IP}\"~" ${SITL_ENV_DIR}/gazebo-classic.env
+    sed -i "s~AIRSIM_IP=\"\"~AIRSIM_IP=\"${AIRSIM_IP}\"~" ${SITL_ENV_DIR}/airsim.env
+    sed -i "s~ROS2_IP=\"\"~ROS2_IP=\"${ROS2_IP}\"~" ${SITL_ENV_DIR}/ros2.env
+    sed -i "s~QGC_IP=\"\"~QGC_IP=\"${QGC_IP}\"~" ${SITL_ENV_DIR}/qgc.env
+
+    EchoGreen "[$(basename "$0")] *   PX4 CONTAINER IP: ${PX4_IP}"
+    EchoGreen "[$(basename "$0")] *   GAZEBO-CLASSIC CONTAINER IP: ${GAZEBO_CLASSIC_IP}"
+    EchoGreen "[$(basename "$0")] *   AIRSIM CONTAINER IP: ${AIRSIM_IP}"
+    EchoGreen "[$(basename "$0")] *   ROS2 CONTAINER IP: ${ROS2_IP}"
+    EchoGreen "[$(basename "$0")] *   QGC CONTAINER IP: ${QGC_IP}"
 
     EchoBoxLine
 }

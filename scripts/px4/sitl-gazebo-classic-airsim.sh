@@ -22,10 +22,17 @@ source ${BASE_DIR}/include/commonEnv.sh
 # >>>----------------------------------------------------
 
 CheckDirExists "PX4-Autopilot"
+CheckDirExists "PX4-Autopilot/Tools"
+
+CheckFileExists "PX4-Autopilot/Tools/convert_ip.py"
 CheckFileExists ${BASE_DIR}/separateFromGazebo.sh
 
+${BASE_DIR}/setGCS.sh
+${BASE_DIR}/setDDS.sh
 ${BASE_DIR}/separateFromGazebo.sh airsim
-PX4-Autopilot/build/px4_sitl_default/bin/px4 -d
+
+PX4_SIM_HOST_ADDR=${GAZEBO_CLASSIC_IP} \
+    PX4-Autopilot/build/px4_sitl_default/bin/px4 -d
 
 sleep infinity
 

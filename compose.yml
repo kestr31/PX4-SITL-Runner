@@ -1,3 +1,11 @@
+networks:
+  default:
+    name: ${SITL_NETWORK_NAME}
+    ipam:
+      driver: default
+      config:
+        - subnet: ${SITL_NETWORK_SUBNET}
+
 services:
   px4-env:
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -9,11 +17,13 @@ services:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      GAZEBO_CLASSIC_IP:          ${GAZEBO_CLASSIC_IP}
+      ROS2_IP:                    ${ROS2_IP}
+      QGC_IP:                     ${QGC_IP}
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${PX4_WORKSPACE}:/home/user/workspace
-    network_mode: host
     hostname: ${PX4_ENV_CONTAINER}
     entrypoint: ${PX4_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -25,6 +35,9 @@ services:
         required: true
       - path: ./envs/px4.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${PX4_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -61,7 +74,6 @@ services:
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace/gazebo
       - ${PX4_WORKSPACE}:/home/user/workspace/px4
-    network_mode: host
     hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
     entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -73,6 +85,9 @@ services:
         required: true
       - path: ./envs/px4.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${GAZEBO_CLASSIC_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -102,13 +117,13 @@ services:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      AIRSIM_IP:                  ${AIRSIM_IP}
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${GAZEBO_CLASSIC_WORKSPACE}:/home/user/workspace/gazebo
       - ${PX4_WORKSPACE}:/home/user/workspace/px4
       - ${AIRSIM_WORKSPACE}:/home/user/workspace/airsim
-    network_mode: host
     hostname: ${GAZEBO_CLASSIC_ENV_CONTAINER}
     entrypoint: ${GAZEBO_CLASSIC_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -120,6 +135,9 @@ services:
         required: true
       - path: ./envs/px4.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${GAZEBO_CLASSIC_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -154,7 +172,6 @@ services:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${AIRSIM_WORKSPACE}:/home/ue4/workspace
-    network_mode: host
     hostname: ${AIRSIM_BINARY_CONTAINER}
     entrypoint: ${AIRSIM_RUN_COMMAND}
     working_dir: /home/ue4/workspace
@@ -164,6 +181,9 @@ services:
         required: true
       - path: ./envs/airsim.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${AIRSIM_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -196,11 +216,12 @@ services:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      PX4_IP:                     ${PX4_IP}
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${ROS2_WORKSPACE}:/home/user/workspace/ros2
-    network_mode: host
     hostname: ${ROS2_ENV_CONTAINER}
     entrypoint: ${ROS2_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -210,6 +231,9 @@ services:
         required: true
       - path: ./envs/ros2.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${ROS2_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -239,12 +263,14 @@ services:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      ROS_DOMAIN_ID:              ${ROS_DOMAIN_ID}
+      PX4_IP:                     ${PX4_IP}
+      AIRSIM_IP:                  ${AIRSIM_IP}
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${ROS2_WORKSPACE}:/home/user/workspace/ros2
       - ${AIRSIM_WORKSPACE}:/home/user/workspace/airsim
-    network_mode: host
     hostname: ${ROS2_ENV_CONTAINER}
     entrypoint: ${ROS2_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -254,6 +280,9 @@ services:
         required: true
       - path: ./envs/ros2.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${ROS2_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -287,7 +316,6 @@ services:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
       - ${QGC_WORKSPACE}:/home/user/workspace
-    network_mode: host
     hostname: ${QGC_ENV_CONTAINER}
     entrypoint: ${QGC_RUN_COMMAND}
     working_dir: /home/user/workspace
@@ -297,6 +325,9 @@ services:
         required: true
       - path: ./envs/qgc.env
         required: true
+    networks:
+      default:
+        ipv4_address: ${QGC_IP}
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
