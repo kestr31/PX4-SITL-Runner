@@ -48,11 +48,6 @@ ${BASE_DIR}/airsim-bridge.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/airsim-bridge.log 
 # USER-DEFINED SATEMENTS
 # >>>----------------------------------------------------
 
-# pip install msgpack-rpc-python 
-# pip install airsim
-
-# pip install torch
-
 touch ${WORKSPACE_DIR}/logs/uxrce-dds.log
 touch ${WORKSPACE_DIR}/logs/airsim-bridge.log
 touch ${WORKSPACE_DIR}/logs/controller.log
@@ -72,6 +67,9 @@ ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_c
 ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
 ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
 ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
+
+# LOGGING ALL TOPICS TO BAG FILE
+ros2 bag record -a -o ${WORKSPACE_DIR}/logs/rosbag 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
