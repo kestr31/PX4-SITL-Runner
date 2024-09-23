@@ -74,6 +74,11 @@ else
             ${dir}/install \
             ${dir}/build
         
+        export AMENT_PREFIX_PATH=""
+        export COLCON_PREFIX_PATH=""
+
+        source /opt/ros/${ROS_DISTRO}/setup.bash
+
         # BUILD THE PACKAGES
         (cd ${dir} || exit 1; colcon build --symlink-install)
         EchoGreen "[$(basename "$0")] BUILD COMPLETED FOR PACKAGES IN ${dir}"
