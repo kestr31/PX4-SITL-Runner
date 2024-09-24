@@ -3,6 +3,7 @@
 # >>>----------------------------------------------------
 SITL_DEPLOY_DIR=${HOME}/Documents/A4VAI-SITL
 GAEZBO_HEADLESS=true
+GAZEBO_POSE="-x -27.50 -y 27.50 -z 0.00 -Y -0.785398"
 
 SITL_NETWORK_NAME=sitl_network
 SITL_NETWORK_SUBNET=172.70.0.0/16

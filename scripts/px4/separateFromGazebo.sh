@@ -46,7 +46,8 @@ EchoGreen "[$(basename $0)] PREVENTING GAZEBO FROM RUNNING."
 EchoYellow "[$(basename $0)] RESETTING THE sitl_run.sh SCRIPT. USING GIT CHECKOUT."
 git -C PX4-Autopilot checkout -- Tools/simulation/gazebo-classic/sitl_run.sh
 
-# cp PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh.bak
+sed -i "s~-x 1.01 -y 0.98 -z 0.83~${GAZEBO_POSE}~g" \
+    PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh
 
 # FIND THE TARGET LINE WITH STRING "$debugger" == "lldb" AND DELETE THE LINE AFTER IT
 START_LINE=$(grep -wn 'if \[ "$debugger" == "lldb" \]; then' PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh | cut -d: -f1)
