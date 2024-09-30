@@ -76,6 +76,7 @@ else
         
         export AMENT_PREFIX_PATH=""
         export COLCON_PREFIX_PATH=""
+        export CMAKE_PREFIX_PATH=""
 
         source /opt/ros/${ROS_DISTRO}/setup.bash
 
