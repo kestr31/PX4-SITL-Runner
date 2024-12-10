@@ -71,6 +71,8 @@ ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 # LOGGING ALL TOPICS TO BAG FILE
 ros2 bag record -a -o ${WORKSPACE_DIR}/logs/rosbag 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 
+${WORKSPACE_DIR}/rosboard/run
+
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws
