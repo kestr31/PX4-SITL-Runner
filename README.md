@@ -30,6 +30,6 @@
 - Nvidia Proprietary Driver
 - Nvidia Container Toolkit
 
-# License
+## License
 
 - This repository is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
