@@ -323,7 +323,7 @@ SetComposeDisplay(){
     else
         EchoRed "[$(basename "$0")] ANY DISPLAY IS NOT SET."
         EchoRed "[$(basename "$0")] ARE YOU RUNNING THIS SCRIPT IN A GRAPHICAL ENVIRONMENT?"
-        EChoRed "[$(basename "$0")] IF SO, PLEASE CHECK YOUR DISPLAY SETTINGS."
+        EchoRed "[$(basename "$0")] IF SO, PLEASE CHECK YOUR DISPLAY SETTINGS."
         exit 1
     fi
 
