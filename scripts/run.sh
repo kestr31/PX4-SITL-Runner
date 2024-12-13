@@ -196,6 +196,7 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
         usageState3["path-planning"]="RUNNING PATH PLANNIG UNIT TEST"
         usageState3["path-following"]="RUNNING PATH FOLLOWING UNIT TEST"
         usageState3["collision-avoidance"]="RUNNING COLLISION AVOIDANCE UNIT TEST"
+        usageState3["pf-ca-integation"]="RUNNING PATH FOLLOWING AND COLLISION AVOIDANCE INTEGRATION TEST"
 
         CheckValidity $0 usageState3 3 "$@"
         # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -233,6 +234,17 @@ elif [ "$1x" == "gazebo-classic-airsim-sitlx" ]; then
             SetRunModeGazeboClassic $0 gazebo-classic-airsim-sitl
             SetRunModeAirSim $0 gazebo-classic-airsim-sitl
             SetRunModeROS2 $0 collision-avoidance-unit-test.sh
+            SetRunModeQGC $0 normal
+        
+        # ACTION: pf-ca-integation. RUN PATH FOLLOWING AND COLLISION AVOIDANCE INTEGRATION TEST
+        elif [ "$3x" == "pf-ca-integationx" ]; then
+            # DO NOT ALLOW ADDITIONAL ARGUMENTS FOR THIS ACTION
+            LimitNumArgument $0 3 "$@"
+            EchoGreen "[$(basename "$0")] RUNNING PATH FOLLOWING AND COLLISION AVOIDANCE INTEGRATION TEST"
+            SetRunModePX4 $0 gazebo-classic-airsim-sitl
+            SetRunModeGazeboClassic $0 gazebo-classic-airsim-sitl
+            SetRunModeAirSim $0 gazebo-classic-airsim-sitl
+            SetRunModeROS2 $0 ca-pf-integration-test.sh
             SetRunModeQGC $0 normal
         fi
         # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
