@@ -55,7 +55,6 @@ touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
 touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
 touch ${WORKSPACE_DIR}/logs/plot.log
 
-
 ros2 run algorithm_test ca_pf_integrated_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
 ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
 ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
@@ -65,8 +64,7 @@ ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_c
 
 ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 
-echo "running collision avoidance path following integration test"
-
+${WORKSPACE_DIR}/rosboard/run
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws

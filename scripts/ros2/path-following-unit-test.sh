@@ -39,9 +39,6 @@ ${BASE_DIR}/uxrce-dds.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/uxrce-dds.log &
 # USER-DEFINED SATEMENTS
 # >>>----------------------------------------------------
 
-
-
-
 touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
 touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
 touch ${WORKSPACE_DIR}/logs/algorithm_test.log
@@ -52,6 +49,7 @@ ros2 run algorithm_test path_following_test 2>&1 | tee ${WORKSPACE_DIR}/logs/alg
 ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
 ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
 
+${WORKSPACE_DIR}/rosboard/run
 
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
