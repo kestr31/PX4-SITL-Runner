@@ -33,6 +33,7 @@ touch ${WORKSPACE_DIR}/logs/uxrce-dds.log
 # RUN THE SHELL SCRIPTS AND LOG THE OUTPUT
 ${BASE_DIR}/uxrce-dds.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/uxrce-dds.log &
 
+CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/path_following_unit_test/log create
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
