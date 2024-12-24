@@ -65,7 +65,10 @@ ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_c
 
 ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 
+# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
+EchoGreen "Running ROSBOARD for ROS2 topic visualization..."
 ${WORKSPACE_DIR}/rosboard/run
+
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws

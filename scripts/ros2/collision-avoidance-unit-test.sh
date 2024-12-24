@@ -22,6 +22,11 @@ done
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
 
+mkdir -p ${WORKSPACE_DIR}/ca_ws
+
+tar -zxvf ${WORKSPACE_DIR}/deps_include.tar.gz -C /usr/local/include
+tar -zxvf ${WORKSPACE_DIR}/deps_lib.tar.gz -C /usr/local/lib
+
 source ${BASE_DIR}/sourceAll.sh
 
 CheckFileExists ${BASE_DIR}/uxrce-dds.sh
@@ -53,12 +58,22 @@ touch ${WORKSPACE_DIR}/logs/collision_avoidance.log
 touch ${WORKSPACE_DIR}/logs/pub_depth.log
 touch ${WORKSPACE_DIR}/logs/plot.log
 
-ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
-ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
-ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
-ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
+# ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
+# ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
+# ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
 
+# ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
+
+ros2 run rs_converter rs_converter 2>&1 | tee ${WORKSPACE_DIR}/logs/rs_converter.log &
+ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 base_link velodyne 2>&1 | tee ${WORKSPACE_DIR}/logs/tf2_ros.log &
+ros2 run rs_converter point_cloud_filter_node 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log &
+ros2 run rs_converter point_cloud_feature_extractor 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor.log &
+# ros2 run jbnu_obstacle_avoidance jbnu_obstacle_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/jbnu_obstacle_avoidance.log &
+
+# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
+EchoGreen "Running ROSBOARD for ROS2 topic visualization..."
 ${WORKSPACE_DIR}/rosboard/run
+
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws
