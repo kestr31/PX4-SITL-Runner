@@ -54,7 +54,7 @@ if [ -d ${GAZEBO_WORKSPACE}/worlds ]; then
     if [ ! -f "$(ls -A ${GAZEBO_WORKSPACE}/worlds/*.world)" ]; then
         EchoYellow "[$(basename $0)] ${GAZEBO_WORKSPACE}/worlds DOES NOT CONTAIN ANY .world FILES."
     else
-        cp -r ${GAZEBO_WORKSPACE}/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/worlds
+        cp -r ${GAZEBO_WORKSPACE}/worlds/*.world ${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/worlds
     fi
 fi
 
