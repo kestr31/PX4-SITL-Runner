@@ -290,30 +290,48 @@ SetRunModeGazeboClassic() {
     SCRIPT_NAME=$(basename "$1")
     RUN_MODE=$2
 
+    # LOAD THE ENVIRONMENT VARIABLES
+    source ${SITL_ENV_DIR}/gazebo-classic.env
+
     if [ "${RUN_MODE}x" == "gazebo-classic-sitlx" ]; then
         RUN_SCRIPT="sitl-px4.sh"
-        GAEZBO_HEADLESS=false
+        # GAEZBO_HEADLESS=false
 
-        if [ ${GAEZBO_HEADLESS} == true ]; then
+        if [ -z "${GAEZBO_HEADLESS}" ]; then
+            sed -i "s~GAEZBO_HEADLESS=\"\"~GAEZBO_HEADLESS=\"false\"~g" ${SITL_ENV_DIR}/gazebo-classic.env
+        fi
+
+        if [ "${GAEZBO_HEADLESS}x" == "truex" ]; then
             EchoYellow "[${SCRIPT_NAME}] GAZEBO HEADLESS MODE ENABLED. ONLY THE GAZEBO SERVER WILL RUN."
             ENABLE_HEADLESS_MODE=1
-        fi
+        fi 
+
     elif [ "${RUN_MODE}x" == "gazebo-classic-airsim-sitlx" ]; then
         RUN_SCRIPT="sitl-px4.sh"
 
-        if [ ${GAEZBO_HEADLESS} == true ]; then
+        if [ -z "${GAEZBO_HEADLESS}" ]; then
+            sed -i "s~GAEZBO_HEADLESS=\"\"~GAEZBO_HEADLESS=\"false\"~g" ${SITL_ENV_DIR}/gazebo-classic.env
+        fi
+
+        if [ "${GAEZBO_HEADLESS}x" == "truex" ]; then
             EchoYellow "[${SCRIPT_NAME}] GAZEBO HEADLESS MODE ENABLED. ONLY THE GAZEBO SERVER WILL RUN."
             ENABLE_HEADLESS_MODE=1
-        fi
+        fi 
+
     elif [ "${RUN_MODE}x" == "sitl-px4x" ]; then
         EchoGreen "[${SCRIPT_NAME}] RUN PX4-AUTOPILOT SITL IN GAZEBO-CLASSIC"
         RUN_SCRIPT="sitl-px4.sh"
         GAEZBO_HEADLESS=false
 
-        if [ ${GAEZBO_HEADLESS} == true ]; then
+        if [ -z "${GAEZBO_HEADLESS}" ]; then
+            sed -i "s~GAEZBO_HEADLESS=\"\"~GAEZBO_HEADLESS=\"false\"~g" ${SITL_ENV_DIR}/gazebo-classic.env
+        fi
+
+        if [ "${GAEZBO_HEADLESS}x" == "truex" ]; then
             EchoYellow "[${SCRIPT_NAME}] GAZEBO HEADLESS MODE ENABLED. ONLY THE GAZEBO SERVER WILL RUN."
             ENABLE_HEADLESS_MODE=1
-        fi
+        fi 
+        
     elif [ "${RUN_MODE}x" == "debugx" ]; then
         EchoGreen "[${SCRIPT_NAME}] DEBUG MODE ENABLED FOR GAZEBO-CLASSIC CONTAINER"
         RUN_SCRIPT="debug.sh"
@@ -325,6 +343,14 @@ SetRunModeGazeboClassic() {
 
     CheckFileExists ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${RUN_SCRIPT}
     CheckFileExecutable ${GAZEBO_CLASSIC_WORKSPACE}/scripts/${RUN_SCRIPT}
+
+    if [ -z "${SITL_WORLD}" ]; then
+        sed -i "s~SITL_WORLD=\"\"~SITL_WORLD=\"empty\"~g" ${SITL_ENV_DIR}/gazebo-classic.env
+    fi
+
+    if [ -z "${SITL_AIRFRAME}" ]; then
+        sed -i "s~SITL_AIRFRAME=\"\"~SITL_AIRFRAME=\"iris\"~g" ${SITL_ENV_DIR}/gazebo-classic.env
+    fi
 
     if [ -z "${ENABLE_HEADLESS_MODE}" ]; then
         sed -i "s~GAZEBO_CLASSIC_RUN_COMMAND=\"\"~GAZEBO_CLASSIC_RUN_COMMAND=\'bash -c \"/home/user/workspace/gazebo/scripts/${RUN_SCRIPT}\"\'~g" ${SITL_ENV_DIR}/gazebo-classic.env
