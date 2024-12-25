@@ -70,8 +70,10 @@ ros2 run lidar lidar & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
 ros2 run lidar check_collision & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
 # ros2 run lidar plot & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
 
-
+# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
+EchoGreen "Running ROSBOARD for ROS2 topic visualization..."
 ${WORKSPACE_DIR}/rosboard/run
+
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
 # FOR EXAMPLE FOR RUNNING:
 #   algorithm1 build at /home/user/workspace/ros2/alg_ws

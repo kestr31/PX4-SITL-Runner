@@ -50,6 +50,7 @@ ros2 run algorithm_test path_following_test 2>&1 | tee ${WORKSPACE_DIR}/logs/alg
 ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
 ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
 
+# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
 ${WORKSPACE_DIR}/rosboard/run
 
 # PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
