@@ -28,7 +28,7 @@ source ${BASE_DIR}/sourceAll.sh
 CheckDirExists ${WORKSPACE_DIR}/logs create
 rm -rf ${WORKSPACE_DIR}/logs/*
 
-CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/path_planning_unit_test/log create
+#CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/path_planning_unit_test/log create
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 

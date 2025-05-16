@@ -24,4 +24,7 @@ done
 
 CheckDirExists "PX4-Autopilot" git https://github.com/PX4/PX4-Autopilot.git ${PX4_VERSION}
 
+CheckDirExists "A4VAI-Custom-PX4-File" git https://github.com/JOCIIIII/A4VAI-Custom-PX4-File.git
+
+chmod -R o+rwx $(dirname "$BASE_DIR")
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
