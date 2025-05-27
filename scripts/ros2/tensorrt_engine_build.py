@@ -5,7 +5,7 @@ import tensorrt as trt
 import pycuda.driver as cuda
 import pycuda.autoinit
 import numpy
-
+import argparse
 
 def generate_calibration_data(input_shape, num_samples=100):
     """캘리브레이션용 더미 데이터 생성"""
@@ -166,10 +166,25 @@ def build_engine_int8(onnx_path, engine_path, input_tensor_name, input_shape=(1,
         return serialized_engine
 
 
+def argument_parser():
+    parser = argparse.ArgumentParser(description='TensorRT Engine Builder')
+    parser.add_argument('--onnx_path', type=str, required=True, help='Path to the ONNX model file')
+    parser.add_argument('--engine_path_fp16', type=str, required=True, help='Path to save the FP16 engine file')
+    parser.add_argument('--engine_path_int8', type=str, required=True, help='Path to save the INT8 engine file')
+    return parser.parse_args()
+
 if __name__ == "__main__":
-    onnx_path = './weight.onnx'
-    engine_path_fp16 = onnx_path + "_fp16.trt"
-    engine_path_int8 = onnx_path + "_int8.trt"
+
+
+    # onnx_path = '~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pathplanning/pathplanning/model/weight.onnx'
+    # engine_path_fp16 = onnx_path + "_fp16.trt"
+    # engine_path_int8 = onnx_path + "_int8.trt"
+
+    args = argument_parser()
+    onnx_path = args.onnx_path
+    engine_path_fp16 = args.engine_path_fp16
+    engine_path_int8 = args.engine_path_int8
+
     input_tensor_name = "observation"
     input_shape = (1, 3, 60, 60)
 
