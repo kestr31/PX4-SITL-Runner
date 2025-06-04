@@ -12,7 +12,7 @@ cp -r ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package/pub_depth 
 rm -rf ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package 
 mkdir -p ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pathplanning/pathplanning/model 
 wget https://github.com/kestr31/PX4-SITL-Runner/releases/download/Resources/weight.onnx -O ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pathplanning/pathplanning/model/weight.onnx 
-chmod -R o+wrx ~/Documents/A4VAI-SITL/ROS2/ros2_ws 
+chmod -R o+wrx ~/Documents/A4VAI-SITL/ROS2 
 ./scripts/run.sh ros2 make-tensorRT-engine.sh 
 ./scripts/run.sh ros2 build ros2_ws 
 ./scripts/run.sh ros2 stop 
