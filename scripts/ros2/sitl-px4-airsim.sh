@@ -44,30 +44,35 @@ ${BASE_DIR}/airsim-bridge.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/airsim-bridge.log 
 
 CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/controller/controller/log create
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-
 # USER-DEFINED SATEMENTS
 # >>>----------------------------------------------------
+touch ${WORKSPACE_DIR}/logs/pcl_practice.log
+touch ${WORKSPACE_DIR}/logs/lidar_processing.log
+#rviz2&
 
-touch ${WORKSPACE_DIR}/logs/controller.log
-touch ${WORKSPACE_DIR}/logs/pathplanning.log
-touch ${WORKSPACE_DIR}/logs/collision_avoidance.log
-touch ${WORKSPACE_DIR}/logs/pub_depth.log
-touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
-touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
-touch ${WORKSPACE_DIR}/logs/plot.log
-touch ${WORKSPACE_DIR}/logs/lidar.log
+#ros2 launch lidar_processing run.launch.py 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar_processing.log &
+#ros2 run pcl_practice pcl_node 2>&1 | tee ${WORKSPACE_DIR}/logs/pcl_practice.log &
+ros2 run dcm_test dcm_test
 
-ros2 run controller controller 2>&1 | tee ${WORKSPACE_DIR}/logs/controller.log &
-ros2 run pathplanning Plan2WP 2>&1 | tee ${WORKSPACE_DIR}/logs/pathplanning.log &
-ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
-ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
-ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
-ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
+#touch ${WORKSPACE_DIR}/logs/controller.log
+#touch ${WORKSPACE_DIR}/logs/pathplanning.log
+#touch ${WORKSPACE_DIR}/logs/collision_avoidance.log
+#touch ${WORKSPACE_DIR}/logs/pub_depth.log
+#touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
+#touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
+#touch ${WORKSPACE_DIR}/logs/plot.log
+#touch ${WORKSPACE_DIR}/logs/lidar.log
 
-ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
-ros2 run lidar lidar & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
-ros2 run lidar check_collision & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
+#ros2 run controller controller 2>&1 | tee ${WORKSPACE_DIR}/logs/controller.log &
+#ros2 run pathplanning Plan2WP 2>&1 | tee ${WORKSPACE_DIR}/logs/pathplanning.log &
+#ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
+#ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
+#ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
+#ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
+
+#ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
+#ros2 run lidar lidar & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
+#ros2 run lidar check_collision & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
 # ros2 run lidar plot & 2>&1 | tee ${WORKSPACE_DIR}/logs/lidar.log &
 
 # RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION

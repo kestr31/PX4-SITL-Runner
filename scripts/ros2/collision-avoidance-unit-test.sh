@@ -22,10 +22,6 @@ done
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
 
-mkdir -p ${WORKSPACE_DIR}/ca_ws
-
-tar -zxvf ${WORKSPACE_DIR}/deps_include.tar.gz -C /usr/local/include
-tar -zxvf ${WORKSPACE_DIR}/deps_lib.tar.gz -C /usr/local/lib
 
 source ${BASE_DIR}/sourceAll.sh
 
@@ -53,10 +49,25 @@ CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/coll
 # USER-DEFINED SATEMENTS
 # >>>----------------------------------------------------
 
+touch ${WORKSPACE_DIR}/logs/rs_converter.log
+touch ${WORKSPACE_DIR}/logs/tf2_ros.log
+touch ${WORKSPACE_DIR}/logs/direct_infer.log
+touch ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log
+touch ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor_cov.log
 touch ${WORKSPACE_DIR}/logs/algorithm_test.log
-touch ${WORKSPACE_DIR}/logs/collision_avoidance.log
-touch ${WORKSPACE_DIR}/logs/pub_depth.log
-touch ${WORKSPACE_DIR}/logs/plot.log
+
+
+ros2 run rs_converter rs_converter 2>&1 | tee ${WORKSPACE_DIR}/logs/rs_converter.log &
+ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 base_link velodyne 2>&1 | tee ${WORKSPACE_DIR}/logs/tf2_ros.log &
+ros2 run rs_converter point_cloud_filter_node 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log &
+ros2 run rs_converter point_cloud_feature_extractor_cov 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor_cov.log &
+ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
+
+python3 /home/user/workspace/ros2/ros2_ws/src/Python_version_easy/direct_infer.py --ros-args   -p model_path:=/home/user/workspace/ros2/ros2_ws/src/Python_version_easy/walid.onnx   -p vec_normalize_path:=/home/user/workspace/ros2/ros2_ws/src/Python_version_easy/vec_normalize.pkl   -p pointcloud_topic:=/pointcloud_features   -p cmd_topic:=/ca_vel_2_control  -p expected_points:=256 2>&1 | tee ${WORKSPACE_DIR}/logs/direct_infer.log &
+
+rviz2
+
+ros2 topic list
 
 # ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
 # ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
@@ -64,11 +75,6 @@ touch ${WORKSPACE_DIR}/logs/plot.log
 
 # ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
 
-ros2 run rs_converter rs_converter 2>&1 | tee ${WORKSPACE_DIR}/logs/rs_converter.log &
-ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 base_link velodyne 2>&1 | tee ${WORKSPACE_DIR}/logs/tf2_ros.log &
-ros2 run rs_converter point_cloud_filter_node 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log &
-ros2 run rs_converter point_cloud_feature_extractor 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor.log &
-# ros2 run jbnu_obstacle_avoidance jbnu_obstacle_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/jbnu_obstacle_avoidance.log &
 
 # RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
 EchoGreen "Running ROSBOARD for ROS2 topic visualization..."
