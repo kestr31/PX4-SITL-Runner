@@ -32,6 +32,7 @@ cp A4VAI-Custom-PX4-File/mc_pos_control/MulticopterPositionControl.cpp    PX4-Au
 cp A4VAI-Custom-PX4-File/mc_pos_control/MulticopterPositionControl.hpp    PX4-Autopilot/src/modules/mc_pos_control/MulticopterPositionControl.hpp
 cp A4VAI-Custom-PX4-File/mc_pos_control/CMakeLists.txt                    PX4-Autopilot/src/modules/mc_pos_control/CMakeLists.txt
 cp A4VAI-Custom-PX4-File/uxrce_dds_client/dds_topics.yaml                 PX4-Autopilot/src/modules/uxrce_dds_client/dds_topics.yaml
+cp -r A4VAI-Custom-PX4-File/worlds_templet                                PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/worlds/templet
 
 # CHECK IF THE FILE sitl_run.sh EXISTS
 CheckFileExists "PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh"

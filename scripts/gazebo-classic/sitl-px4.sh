@@ -24,6 +24,10 @@ PX4_SIM_DIR=${PX4_WORKSPACE}/PX4-Autopilot/Tools/simulation
 PX4_BUILD_DIR=${PX4_WORKSPACE}/PX4-Autopilot/build/px4_sitl_default
 PX4_BINARY_DIR=${PX4_WORKSPACE}/PX4-Autopilot/build/px4_sitl_default/bin
 
+apt-get update && apt-get install -y gettext
+
+envsubst < ${PX4_SIM_DIR}/gazebo-classic/sitl_gazebo-classic/worlds/templet/windy.world.in > ${PX4_SIM_DIR}/gazebo-classic/sitl_gazebo-classic/worlds/windy.world
+
 source /usr/share/gazebo/setup.bash
 export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:${GAZEBO_WORKSPACE}/worlds
 
