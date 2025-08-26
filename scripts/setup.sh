@@ -8,7 +8,6 @@ git clone https://github.com/JOCIIIII/A4VAI-Algorithms-ROS2.git ~/Documents/A4VA
 git -C ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src submodule update --init --recursive 
 git clone https://github.com/JOCIIIII/A4VAI-ROS2-Util-Package.git ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package 
 cp -r ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package/plotter ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/plotter 
-cp -r ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package/pub_depth ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pub_depth 
 rm -rf ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/A4VAI-ROS2-Util-Package 
 mkdir -p ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pathplanning/pathplanning/model 
 wget https://github.com/kestr31/PX4-SITL-Runner/releases/download/Resources/weight.onnx -O ~/Documents/A4VAI-SITL/ROS2/ros2_ws/src/pathplanning/pathplanning/model/weight.onnx 
