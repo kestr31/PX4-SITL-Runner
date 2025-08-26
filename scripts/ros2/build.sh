@@ -22,6 +22,7 @@ done
 # MAIN STATEMENTS
 # >>>----------------------------------------------------
 
+sudo rm -rf /opt/hpcx
 rosdep update
 
 if [ $# -eq 0 ]; then
@@ -51,7 +52,7 @@ if [ $# -eq 0 ]; then
                 rosdep install -i --from-paths ${dir}/src --rosdistro ${ROS_DISTRO} -y
 
                 # BUILD THE PACKAGES
-                (cd ${dir} || exit 1; colcon build --symlink-install)
+                (cd ${dir} || exit 1; colcon build --symlink-install --cmake-args -DBUILD_TESTING=OFF)
                 EchoGreen "[$(basename "$0")] BUILD COMPLETED FOR PACKAGES IN ${dir}"
                 EchoBoxLine
             fi
@@ -81,7 +82,7 @@ else
         source /opt/ros/${ROS_DISTRO}/setup.bash
 
         # BUILD THE PACKAGES
-        (cd ${dir} || exit 1; colcon build --symlink-install)
+        (cd ${dir} || exit 1; colcon build --symlink-install --cmake-args -DBUILD_TESTING=OFF)
         EchoGreen "[$(basename "$0")] BUILD COMPLETED FOR PACKAGES IN ${dir}"
         EchoBoxLine
     done
