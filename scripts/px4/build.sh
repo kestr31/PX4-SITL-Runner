@@ -32,7 +32,18 @@ cp A4VAI-Custom-PX4-File/mc_pos_control/MulticopterPositionControl.cpp    PX4-Au
 cp A4VAI-Custom-PX4-File/mc_pos_control/MulticopterPositionControl.hpp    PX4-Autopilot/src/modules/mc_pos_control/MulticopterPositionControl.hpp
 cp A4VAI-Custom-PX4-File/mc_pos_control/CMakeLists.txt                    PX4-Autopilot/src/modules/mc_pos_control/CMakeLists.txt
 cp A4VAI-Custom-PX4-File/uxrce_dds_client/dds_topics.yaml                 PX4-Autopilot/src/modules/uxrce_dds_client/dds_topics.yaml
-cp -r A4VAI-Custom-PX4-File/worlds_templet                                PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/worlds/templet
+cp A4VAI-Custom-PX4-File/worlds_templet/windy_test.world                                PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/worlds/windy.world
+cp A4VAI-Custom-PX4-File/airframes/2000_gazebo-classic_s2000                                PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes/2000_gazebo-classic_s2000
+cp A4VAI-Custom-PX4-File/airframes/CMakeLists.txt  PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes/CMakeLists.txt
+cp A4VAI-Custom-PX4-File/simulator_mavlink/sitl_targets_gazebo-classic.cmake                 PX4-Autopilot/src/modules/simulation/simulator_mavlink/sitl_targets_gazebo-classic.cmake
+cp -r A4VAI-Custom-PX4-File/s2000                 PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/models/s2000
+cp A4VAI-Custom-PX4-File/sitl_run/sitl_run.sh                  PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh
+cp A4VAI-SITL/PX4-Autopilot/A4VAI-Custom-PX4-File/mavlink_configs/sitl.json                 PX4-Autopilot/test/mavsdk_tests/configs/sitl.json
+cp A4VAI-Custom-PX4-File/gitignore/.gitignore                 PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/.gitignore
+cp A4VAI-Custom-PX4-File/location/sitl_tests.yml                 PX4-Autopilot/.github/workflows/sitl_tests.yml
+cp A4VAI-Custom-PX4-File/firmware_build_test/firmware_build_test.yml                 PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/.github/workflows/firmware_build_test.yml
+cp A4VAI-Custom-PX4-File/multiple_run/sitl_multiple_run.sh                 PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_multiple_run.sh
+cp A4VAI-Custom-PX4-File/launch/s2000.launch                 PX4-Autopilot/launch/s2000.launch
 
 # CHECK IF THE FILE sitl_run.sh EXISTS
 CheckFileExists "PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_run.sh"
