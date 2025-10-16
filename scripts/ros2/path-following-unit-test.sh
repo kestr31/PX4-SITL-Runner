@@ -36,31 +36,16 @@ ${BASE_DIR}/uxrce-dds.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/uxrce-dds.log &
 CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/path_following_unit_test/log create
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
-# USER-DEFINED SATEMENTS
-# >>>----------------------------------------------------
-
+# CREATE LOG FILES
 touch ${WORKSPACE_DIR}/logs/node_MPPI_output.log
 touch ${WORKSPACE_DIR}/logs/node_att_ctrl.log
 touch ${WORKSPACE_DIR}/logs/algorithm_test.log
 touch ${WORKSPACE_DIR}/logs/plot.log
 
-ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
+# RUN THE ROS2 NODES
 ros2 run algorithm_test path_following_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
 ros2 run pathfollowing node_MPPI_output 2>&1 | tee ${WORKSPACE_DIR}/logs/node_MPPI_output.log &
 ros2 run pathfollowing node_att_ctrl 2>&1 | tee ${WORKSPACE_DIR}/logs/node_att_ctrl.log &
-
-# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
-${WORKSPACE_DIR}/rosboard/run
-
-# PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
-# FOR EXAMPLE FOR RUNNING:
-#   algorithm1 build at /home/user/workspace/ros2/alg_ws
-# PLACE THE FOLLOWING COMMAND OR CREATE A SHELL SCRIPT WITH THE COMMAND:
-#   source /opt/ros/${ROS_DISTRO}/setup.bash
-#   source /home/user/workspace/ros2/alg_ws/install/setup.bash
-#   ros2 run algorithm1 algorithm1_node
-# CHECK uxrce-dds.sh, airsim-bridge.sh, AND THIS SCRIPT FOR EXAMPLES
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

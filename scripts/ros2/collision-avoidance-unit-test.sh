@@ -46,9 +46,7 @@ ${BASE_DIR}/airsim-bridge.sh 2>&1 | tee ${WORKSPACE_DIR}/logs/airsim-bridge.log 
 CheckDirExists ${WORKSPACE_DIR}/ros2_ws/build/algorithm_test/algorithm_test/collosion_avoidance_unit_test/log create
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# USER-DEFINED SATEMENTS
-# >>>----------------------------------------------------
-
+# CREATE LOG FILES
 touch ${WORKSPACE_DIR}/logs/rs_converter.log
 touch ${WORKSPACE_DIR}/logs/tf2_ros.log
 touch ${WORKSPACE_DIR}/logs/direct_infer.log
@@ -56,38 +54,16 @@ touch ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log
 touch ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor_cov.log
 touch ${WORKSPACE_DIR}/logs/algorithm_test.log
 
-
+# RUN THE ROS2 NODES
+ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
 ros2 run rs_converter rs_converter 2>&1 | tee ${WORKSPACE_DIR}/logs/rs_converter.log &
 ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 base_link velodyne 2>&1 | tee ${WORKSPACE_DIR}/logs/tf2_ros.log &
 ros2 run rs_converter point_cloud_filter_node 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_filter_node.log &
 ros2 run rs_converter point_cloud_feature_extractor_cov 2>&1 | tee ${WORKSPACE_DIR}/logs/point_cloud_feature_extractor_cov.log &
-ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
 
 python3 /home/user/workspace/ros2/ros2_ws/src/Python_version_easy/direct_infer.py --ros-args   -p model_path:=/home/user/workspace/ros2/ros2_ws/src/Python_version_easy/walid.onnx   -p vec_normalize_path:=/home/user/workspace/ros2/ros2_ws/src/Python_version_easy/vec_normalize.pkl   -p pointcloud_topic:=/pointcloud_features   -p cmd_topic:=/ca_vel_2_control  -p expected_points:=256 2>&1 | tee ${WORKSPACE_DIR}/logs/direct_infer.log &
 
 rviz2
-
-ros2 topic list
-
-# ros2 run algorithm_test collision_avoidance_test 2>&1 | tee ${WORKSPACE_DIR}/logs/algorithm_test.log &
-# ros2 run collision_avoidance collision_avoidance 2>&1 | tee ${WORKSPACE_DIR}/logs/collision_avoidance.log &
-# ros2 run pub_depth pub_depth 2>&1 | tee ${WORKSPACE_DIR}/logs/pub_depth.log &
-
-# ros2 run plotter plot 2>&1 | tee ${WORKSPACE_DIR}/logs/plot.log &
-
-
-# RUN ROSBOARD FOR ROS2 TOPIC VISUALIZATION
-EchoGreen "Running ROSBOARD for ROS2 topic visualization..."
-${WORKSPACE_DIR}/rosboard/run
-
-# PLACE USER-DEFINED SHELL SCRIPTS/COMMANDS HERE
-# FOR EXAMPLE FOR RUNNING:
-#   algorithm1 build at /home/user/workspace/ros2/alg_ws
-# PLACE THE FOLLOWING COMMAND OR CREATE A SHELL SCRIPT WITH THE COMMAND:
-#   source /opt/ros/${ROS_DISTRO}/setup.bash
-#   source /home/user/workspace/ros2/alg_ws/install/setup.bash
-#   ros2 run algorithm1 algorithm1_node
-# CHECK uxrce-dds.sh, airsim-bridge.sh, AND THIS SCRIPT FOR EXAMPLES
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
