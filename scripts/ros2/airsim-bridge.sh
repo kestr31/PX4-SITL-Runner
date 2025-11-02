@@ -38,6 +38,6 @@ while ! grep -q "SimpleFlight" /home/user/workspace/airsim/log; do
     sleep 0.5
 done
 
+sleep 2
 ros2 launch airsim_ros_pkgs airsim_node.launch.py host_ip:=${AIRSIM_IP}
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
