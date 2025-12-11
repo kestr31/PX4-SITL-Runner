@@ -51,13 +51,13 @@ services:
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   gz-sim:
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -69,6 +69,9 @@ services:
       DISPLAY:                    ${SITL_DISPLAY}
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
+      NVIDIA_VISIBLE_DEVICES:     all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      __GLX_VENDOR_LIBRARY_NAME:  nvidia
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
@@ -118,6 +121,9 @@ services:
       WAYLAND_DISPLAY:            ${SITL_WAYLAND_DISPLAY}
       XDG_RUNTIME_DIR:            ${XDG_RUNTIME_DIR}
       AIRSIM_IP:                  ${AIRSIM_IP}
+      NVIDIA_VISIBLE_DEVICES:     all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      __GLX_VENDOR_LIBRARY_NAME:  nvidia
     volumes:
       - ${X11_SOCKET_DIR}:${X11_SOCKET_DIR}
       - ${SITL_PULSEAUDIO_DIR}:/run/user/1000/pulse
@@ -285,7 +291,6 @@ services:
         ipv4_address: ${ROS2_IP}
     ports:
       - 8890:8888
-      - 8765:8765
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -345,11 +350,11 @@ services:
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # ----UNCOMMENT TO ENABLE NVIDIA GPU ACCELERATION----
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
