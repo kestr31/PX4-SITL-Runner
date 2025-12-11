@@ -23,6 +23,23 @@ done
 # >>>----------------------------------------------------
 
 sudo rm -rf /opt/hpcx
+
+# UNSET MPI ENVIRONMENT VARIABLES TO PREVENT BUILD ERRORS
+unset OPAL_PREFIX
+unset OPENMPI_VERSION
+unset OMPI_MCA_coll_hcoll_enable
+
+# UPDATE ROS KEYRING
+EchoGreen "[$(basename "$0")] UPDATING ROS KEYRING..."
+sudo rm -f /usr/share/keyrings/ros-archive-keyring.gpg
+curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | \
+    sudo gpg --dearmor --batch -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# INSTALL ADDITIONAL ROS2 PACKAGES
+EchoGreen "[$(basename "$0")] INSTALLING ADDITIONAL ROS2 PACKAGES..."
+sudo apt-get update
+sudo apt-get install -y ros-humble-pcl-ros ros-humble-rmw-cyclonedds-cpp
+
 rosdep update
 
 if [ $# -eq 0 ]; then
